@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:country_pickers/country_pickers.dart';
 import 'package:country_pickers/country.dart';
 import 'package:intl/intl.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+
+import 'Indian.dart';
+import 'dashboard.dart';
 class Cont extends StatefulWidget {
   const Cont({Key key}) : super(key: key);
 
@@ -15,6 +19,7 @@ class Cont extends StatefulWidget {
 class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
   Covid19Dashboard data;
   AnimationController _controller;
+  var _selectedIndex = 0;
   final formatter = NumberFormat.decimalPattern('en-US');
   @override
   void initState() {
@@ -57,7 +62,102 @@ class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
       )
 
 
-   ] )));}
+   ], ),),
+      bottomNavigationBar:  Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 20,
+              color: Colors.black.withOpacity(.1),
+            )
+          ],
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+            child: GNav(
+              // rippleColor: Colors.black87,
+              // hoverColor: Colors.yellow,
+              gap: 8,
+              // activeColor: Colors.black,
+              iconSize: 24,
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              duration: Duration(milliseconds: 400),
+              // tabBackgroundColor: Colors.yellow,
+              color: Colors.black,
+              tabs: [
+                GButton(
+                  icon: Icons.apps,
+                  iconSize: 30,
+                  text: 'Home',
+                  backgroundColor: Colors.red[100],
+                  textColor: Colors.red,
+                  iconActiveColor: Colors.red,
+                  iconColor: Colors.red,
+                  onPressed: () {
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),),);
+                  },
+                ),
+                GButton(
+                  icon: Icons.find_in_page,
+                  iconColor: Colors.purpleAccent,
+                  text: 'Countries',
+                  backgroundColor: Colors.purple[100],
+                  textColor: Colors.purple,
+                  iconActiveColor: Colors.purpleAccent[200],
+                  // onPressed: () {
+                  //   Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(builder: (context) => Cont()),
+                  //   );
+                  //
+                  // },
+                ),
+                GButton(
+                  icon: Icons.countertops,
+                  text: 'States',
+                  iconColor: Colors.pink,
+                  backgroundColor: Colors.pink[100],
+                  textColor: Colors.pink,
+                  iconActiveColor: Colors.redAccent,
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => Indian()));
+//
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => MytestApp()),
+                    // );
+                  },
+                ),
+                GButton(
+                  icon: Icons.settings,
+                  text: 'Settings',
+                  iconColor: Colors.blue,
+                  backgroundColor: Colors.blue[100],
+                  textColor: Colors.blue[500],
+                  iconActiveColor: Colors.blue[600],
+                  onPressed: () {
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => MytestApp()),
+                    // );
+                  },
+                ),
+              ],
+              selectedIndex: 1,
+              // onTabChange: (index) {
+              //   setState(() {
+              //     _selectedIndex = index;
+              //   });
+              // },
+            ),
+          ),
+        ),
+      ),
+
+    );}
 
 
 
