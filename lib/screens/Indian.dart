@@ -23,7 +23,7 @@ class _Indian extends State<Indian> {
   var url =
       "https://api.apify.com/v2/key-value-stores/toDWvRj1JpTXiM8FF/records/LATEST?disableRedirect=true";
   List data;
-  var _selectedIndex = 0;
+
 
   static String active,
       totalRecovered,
@@ -60,9 +60,9 @@ class _Indian extends State<Indian> {
         title: Text('Concure'),
     ),
 
-    body:data==null?Center(child: CircularProgressIndicator()): ListView.builder(
-    itemCount: data == null ? 0 : data.length,
-    itemBuilder:(BuildContext context, int index) {
+      body:data==null?Center(child: CircularProgressIndicator()): ListView.builder(
+          itemCount: data == null ? 0 : data.length,
+          itemBuilder: (BuildContext context, int index) {
       title = data[index]['region'].toString();
       active = data[index]['activeCases'].toString();
       totalRecovered = data[index]['recovered'].toString();
@@ -90,16 +90,24 @@ class _Indian extends State<Indian> {
     fontSize: 16.0, fontWeight: FontWeight.w500),
     ),
     children: <Widget>[
-
-
-
+    ListTile(
+    title: Text(
+        'Active Cases:  ' +
+        data[index]['activeCases'].toString(),
+      style: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.w700,
+          color: Colors.red),
+    ),),
     Pan(
+
     tr: totalRecovered,
     nr: nRec,
     td: tdecre,
     nd: nDecre,
     ti: tinfec,
     ni: nInfec,
+
     ),
 
     ],
@@ -108,7 +116,7 @@ class _Indian extends State<Indian> {
     ),
     ),
     );
-    }),    /*new Container(child: new Text(data[index]['region']),padding: const EdgeInsets.all(20),),*/
+    }),
 
 
 
