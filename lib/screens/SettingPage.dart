@@ -1,5 +1,6 @@
 import 'dart:async';
 
+
 import 'package:covid19_tracker/model/config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +37,13 @@ return prefs.commit();
     super.initState();
 
 
-    Getsettings().then(update);
+   Getsettings().then(update);
   }
+     FutureOr update(bool value) {
+       setState(() {
+         isSwitched=value;
+       });
+     }
   @override
   Widget build(BuildContext context) {
 
@@ -60,7 +66,8 @@ return prefs.commit();
 
                                            isSwitched=value;
                                            currentTheme.switchTheme();
-                                           Savesettings(isSwitched);
+
+                                          Savesettings(isSwitched);
 
 
                                     },
@@ -179,9 +186,5 @@ return prefs.commit();
 
 
 
-  FutureOr update(bool value) {
-      setState(() {
-        isSwitched=value;
-      });
-  }
+
 }
