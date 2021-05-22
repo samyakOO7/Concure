@@ -1,5 +1,6 @@
 import 'package:covid19_tracker/model/countries.dart';
 import 'package:covid19_tracker/model/covid19_dashboard.dart';
+import 'package:covid19_tracker/screens/SettingPage.dart';
 import 'package:covid19_tracker/services/networking.dart';
 import 'package:flutter/material.dart';
 import 'package:country_pickers/country_pickers.dart';
@@ -139,10 +140,10 @@ class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
                   textColor: Colors.blue[500],
                   iconActiveColor: Colors.blue[600],
                   onPressed: () {
-                    // Navigator.pushReplacement(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => MytestApp()),
-                    // );
+                     Navigator.pushReplacement(
+                       context,
+                       MaterialPageRoute(builder: (context) => SettingPage()),
+                    );
                   },
                 ),
               ],

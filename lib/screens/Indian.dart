@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:covid19_tracker/model/config.dart';
+import 'package:covid19_tracker/screens/SettingPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
@@ -39,6 +41,7 @@ class _Indian extends State<Indian> {
   void initState() {
     super.initState();
     this.getJsonData();
+
   }
 
   // ignore: missing_return
@@ -212,10 +215,10 @@ class _Indian extends State<Indian> {
 
     //TODO
 
-    // Navigator.pushReplacement(
-    //   context,
-    //   MaterialPageRoute(builder: (context) => MytestApp()),
-    // );
+     Navigator.pushReplacement(
+       context,
+      MaterialPageRoute(builder: (context) => SettingPage()),
+     );
 
     },
     ),

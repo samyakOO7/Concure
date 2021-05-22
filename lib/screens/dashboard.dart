@@ -10,6 +10,8 @@ import 'package:country_pickers/country.dart';
 import 'package:intl/intl.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+import 'SettingPage.dart';
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key key}) : super(key: key);
 
@@ -22,8 +24,8 @@ class _DashboardScreenState extends State<DashboardScreen>
   Covid19Dashboard data;
   AnimationController _controller;
   Animation _curvedAnimation;
-  var _selectedIndex = 0;
-  PageController _pageController;
+
+
 
   @override
   void initState() {
@@ -35,11 +37,15 @@ class _DashboardScreenState extends State<DashboardScreen>
     _curvedAnimation =
         CurvedAnimation(parent: _controller, curve: Curves.bounceInOut);
 
-    _pageController = PageController();
+
     getData();
     //_controller.forward();
   }
-
+  @override
+  dispose() {
+    _controller.dispose(); // you need this
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -213,10 +219,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                   textColor: Colors.blue[500],
                   iconActiveColor: Colors.blue[600],
                   onPressed: () {
-                    // Navigator.pushReplacement(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => MytestApp()),
-                    // );
+                    Navigator.pushReplacement(
+                       context,
+                       MaterialPageRoute(builder: (context) => SettingPage()),
+                     );
                   },
                 ),
               ],
