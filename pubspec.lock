@@ -28,7 +28,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.0"
+    version: "2.6.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -197,6 +197,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.6"
+  date_range_picker:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "87993aa58bbfff82d0f40d7b14edabfdc6d73eef"
+      url: "https://github.com/LempereurBenjamin/date_range_picker"
+    source: git
+    version: "1.0.6"
   equatable:
     dependency: transitive
     description:

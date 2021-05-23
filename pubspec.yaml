@@ -21,6 +21,9 @@ environment:
   sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
+  date_range_picker:
+    git:
+      url: https://github.com/LempereurBenjamin/date_range_picker
   flutter:
     sdk: flutter
 
