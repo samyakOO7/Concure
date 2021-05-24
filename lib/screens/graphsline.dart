@@ -2,7 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
+import 'package:stack/stack.dart' as st;
 import 'Countries.dart';
 import 'Indian.dart';
 import 'SettingPage.dart';
@@ -28,11 +28,121 @@ class _GraphsLineState extends State<GraphsLine> {
 
   List greenspots;
   List redspots;
+
+  List greenspotsformonth;
+  List redspotsformonth;
   List<dynamic> dataList;
   List blackspots;
 
   dynamic daily7;
   bool isShowingMainData;
+  st.Stack <FlSpot> stgreen;
+  st.Stack <FlSpot> stred;
+  int getdate(String s)
+  {
+
+
+    int first = int.parse(s[8]);
+    int second = int.parse(s[9]);
+    if (first == 3) {
+      return 30 ;
+    } else if(first==2)
+      return 20+second;
+    else if (first==1)
+      return 10+second;
+    else return second;
+
+
+    // int len = s.length;
+    //   print("given date is "+s);
+    //
+    // int secondlast = int.parse(s[len-2]);
+    // int last = int.parse(s[len-1]);
+    // // print("second last is "+secondlast.toString() );
+    // // print("last is "+last.toString());
+    // if(secondlast==3)
+    //   return 30;
+    // else if(secondlast ==2)
+    //   {
+    //     print("return here");
+    //     (20+last).toInt();
+    //
+    //   }
+    // else if(secondlast ==1)
+    //   {
+    //     (10+last).toInt();
+    //   }
+    // else
+    //   return last.toInt();
+  }
+
+  Future<void> getDatamonthly() async {
+    response = await http.get('https://api.covid19india.org/data.json');
+    daily7 = jsonDecode(response.body);
+    dataList = daily7['cases_time_series'];
+    dataList.removeRange(0, 337);
+    int month = 1;
+    stgreen = st.Stack<FlSpot>();
+    stred= st.Stack<FlSpot>();
+
+    greenspots = new List<FlSpot>();
+    blackspots = new List<FlSpot>();
+    redspots = new List<FlSpot>();
+
+    int lastmonth = getmonth(dataList[dataList.length-1]['dateymd']);;
+
+    // print(dataList);
+
+    int temp = 0;
+    int tempred = 0;
+    int tempdeath = 0;
+    greenspotsformonth = new List<FlSpot>();
+    redspotsformonth = new List<FlSpot>();
+
+
+
+    for (int i = dataList.length - 1 ; i >=0; i--) {
+      month = getmonth(dataList[i]['dateymd']);
+
+      if (month != lastmonth) {
+        // print("FOR MONTH " + lastmonth.toString());
+
+        while(stgreen.isEmpty==false)
+          {
+            greenspotsformonth.add(stgreen.pop());
+          }
+        while(stred.isEmpty==false)
+        {
+          redspotsformonth.add(stred.pop());
+        }
+
+            break;
+      }
+        tempred = int.parse(dataList[i]['dailyconfirmed']);
+    temp = int.parse(dataList[i]['dailyrecovered']);
+    int date = getdate(dataList[i]['dateymd']);
+    // print("date is "+date.toString());
+
+      FlSpot fl = new FlSpot(
+            double.parse(date.toString()), double.parse(temp.toString()));
+      stgreen.push(fl);
+      FlSpot fl2 = new FlSpot(
+          double.parse(date.toString()), double.parse(tempred.toString()));
+
+      stred.push(fl2);
+
+
+
+    }
+    //   print("length is  "+greenspotsformonth.length.toString());
+    // print('Here EVERYTHING IS GOOD');
+
+    setState(() {});
+  }
+
+
+
+
 
   Future<void> getData() async {
     response = await http.get('https://api.covid19india.org/data.json');
@@ -88,9 +198,7 @@ class _GraphsLineState extends State<GraphsLine> {
     FlSpot fl = new FlSpot(
         double.parse(month.toString()), double.parse(temp.toString()));
     greenspots.add(fl);
-    // FlSpot(18, 2.5),
 
-    // redspots.add(tempred);
 
     FlSpot fl2 = new FlSpot(
         double.parse(month.toString()), double.parse(tempred.toString()));
@@ -98,13 +206,8 @@ class _GraphsLineState extends State<GraphsLine> {
     FlSpot fl3 = new FlSpot(
         double.parse(month.toString()), double.parse(tempdeath.toString()));
     blackspots.add(fl3);
-
-
-
     print("length of green spots "+greenspots.length.toString());
     print(greenspots);
-    // print(casespermonth);
-    // print(recoverypermonth);
     setState(() {});
   }
 
@@ -113,9 +216,10 @@ class _GraphsLineState extends State<GraphsLine> {
     super.initState();
     isShowingMainData = true;
     getData();
+    getDatamonthly();
   }
 
-  int selectedIndex = 0;
+  // int selectedIndex = 0;
   int segmentedControlGroupValue = 0;
 
   @override
@@ -149,16 +253,28 @@ class _GraphsLineState extends State<GraphsLine> {
             height: 37,
           ),
           Expanded(
-            child: greenspots == null
-                ? CircularProgressIndicator()
+            child: segmentedControlGroupValue==0 ? (greenspots == null
+                ? Center(child: CircularProgressIndicator())
                 : Padding(
                     padding: const EdgeInsets.only(right: 16.0, left: 6.0),
                     child: LineChart(
                       sampleData1(),
-                      swapAnimationDuration: const Duration(milliseconds: 250),
+                      // swapAnimationDuration: const Duration(milliseconds: 250),
                     ),
-                  ),
+                  )
+          ):
+            (greenspotsformonth == null
+                ? Center(child: CircularProgressIndicator())
+                : Padding(
+              padding: const EdgeInsets.only(right: 16.0, left: 6.0),
+              child: LineChart(
+                sampleData2(),
+                swapAnimationDuration: const Duration(milliseconds: 250),
+              ),
+            )
+            )
           ),
+
           const SizedBox(
             height: 10,
           ),
@@ -387,21 +503,176 @@ class _GraphsLineState extends State<GraphsLine> {
         const Color(0x00aa4cfc),
       ]),
     );
-    LineChartBarData lineChartBarData3 = LineChartBarData(
-      spots: blackspots,
-      isCurved: true,
-      colors: [Colors.black],
-      barWidth: 2,
-      isStrokeCapRound: true,
-      dotData: FlDotData(
-        show: true,
-      ),
-    );
 
     return [
       lineChartBarData1,
       lineChartBarData2,
-      lineChartBarData3,
+      // lineChartBarData3,
     ];
   }
+
+
+
+
+
+
+
+
+
+  LineChartData sampleData2() {
+    return LineChartData(
+      // backgroundColor: Colors.black54,
+      lineTouchData: LineTouchData(
+        touchTooltipData: LineTouchTooltipData(
+          tooltipBgColor: Colors.blueGrey.withOpacity(0.9),
+        ),
+        touchCallback: (LineTouchResponse touchResponse) {},
+        handleBuiltInTouches: true,
+      ),
+      gridData: FlGridData(
+        show: true,
+      ),
+      titlesData: FlTitlesData(
+        bottomTitles: SideTitles(
+          showTitles: true,
+          reservedSize: 32,
+          getTextStyles: (value) => const TextStyle(
+            color: Color(0xff72719b),
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+          margin: 10,
+          getTitles: (value) {
+            switch (value.toInt()) {
+              case 1:
+                return '1';
+
+              case 5:
+                return '5';
+              case 10:
+                return '10';
+
+              case 15:
+                return '15';
+
+              case 20:
+                return '20';
+
+              case 25:
+                return '25';
+
+              case 30:
+                return '30';
+
+
+            }
+            return '';
+          },
+        ),
+        leftTitles: SideTitles(
+          showTitles: true,
+          getTextStyles: (value) => const TextStyle(
+            color: Color(0xff75729e),
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
+          getTitles: (value) {
+            switch (value.toInt()) {
+
+              case 200000:
+                return '200k';
+              case 300000:
+                return '300k';
+              case 400000:
+                return '400k';
+              case 500000:
+                return '500k';
+                case 600000:
+              return '600k';
+              case 250000:
+                return '250k';
+              case 350000:
+                return '350k';
+                // return '350k';
+              case 450000:
+                return '450k';
+              case 550000:
+                return '550k';
+
+            }
+            return '';
+          },
+          margin: 8,
+          reservedSize: 40,
+        ),
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: const Border(
+          bottom: BorderSide(
+            color: Color(0xff4e4965),
+            width: 2,
+          ),
+          left: BorderSide(
+            color: Color(0xff4e4965),
+            // color: Colors.,
+            width: 2,
+            // color: Colors.transparent,
+          ),
+          right: BorderSide(
+            color: Colors.transparent,
+          ),
+          top: BorderSide(
+            color: Colors.transparent,
+          ),
+        ),
+      ),
+      minX: 0,
+      maxX: 30,
+      maxY: 600000,
+      minY: 0,
+      lineBarsData: linesBarData2(),
+    );
+  }
+
+
+  List<LineChartBarData> linesBarData2() {
+    LineChartBarData lineChartBarData1 = LineChartBarData(
+      spots: redspotsformonth,
+      isCurved: true,
+      colors: [Colors.red],
+      barWidth: 3,
+      isStrokeCapRound: true,
+      dotData: FlDotData(
+        show: false,
+      ),
+      belowBarData: BarAreaData(
+        show: false,
+      ),
+    );
+    LineChartBarData lineChartBarData2 = LineChartBarData(
+      spots: greenspotsformonth,
+      isCurved: true,
+      // colors: [const Color(0xff4af699)],
+      colors: [Colors.green],
+      barWidth: 2,
+      isStrokeCapRound: true,
+      dotData: FlDotData(
+        show: false,
+      ),
+      belowBarData: BarAreaData(show: false, colors: [
+        const Color(0x00aa4cfc),
+      ]),
+    );
+
+
+    return [
+      lineChartBarData1,
+      lineChartBarData2,
+      // lineChartBarData3,
+    ];
+  }
+
+
+
 }
