@@ -10,6 +10,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 
 import 'Indian.dart';
 import 'dashboard.dart';
+
 class Cont extends StatefulWidget {
   const Cont({Key key}) : super(key: key);
 
@@ -17,7 +18,7 @@ class Cont extends StatefulWidget {
   _Cont createState() => _Cont();
 }
 
-class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
+class _Cont extends State<Cont> with SingleTickerProviderStateMixin {
   Covid19Dashboard data;
   AnimationController _controller;
   var _selectedIndex = 0;
@@ -32,6 +33,7 @@ class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
     getData();
     //_controller.forward();
   }
+
   Future<void> getData() async {
     Networking network = Networking();
     Covid19Dashboard result = await network.getDashboardData();
@@ -43,28 +45,29 @@ class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: AppBar(
         title: Text('Concure'),
-    ),
-    body: data == null
-    ? Center(child: CircularProgressIndicator())
-        : RefreshIndicator(
-    onRefresh: getData,
-    child: CustomScrollView(
-    slivers: <Widget>[
-      SliverList(
-        delegate: SliverChildBuilderDelegate((context, index) {
-          var item = data.countries[index];
-          return buildExpansionTile(item, index);
-        }, childCount: data.countries.length),
-      )
-
-
-   ], ),),
-      bottomNavigationBar:  Container(
+      ),
+      body: data == null
+          ? Center(child: CircularProgressIndicator())
+          : RefreshIndicator(
+              onRefresh: getData,
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      var item = data.countries[index];
+                      return buildExpansionTile(item, index);
+                    }, childCount: data.countries.length),
+                  )
+                ],
+              ),
+            ),
+      bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -90,14 +93,19 @@ class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
               tabs: [
                 GButton(
                   icon: Icons.apps,
-                  iconSize: 30,
+                  // iconSize: 30,
                   text: 'Home',
                   backgroundColor: Colors.red[100],
                   textColor: Colors.red,
                   iconActiveColor: Colors.red,
                   iconColor: Colors.red,
                   onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),),);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DashboardScreen(),
+                      ),
+                    );
                   },
                 ),
                 GButton(
@@ -107,13 +115,6 @@ class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
                   backgroundColor: Colors.purple[100],
                   textColor: Colors.purple,
                   iconActiveColor: Colors.purpleAccent[200],
-                  // onPressed: () {
-                  //   Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(builder: (context) => Cont()),
-                  //   );
-                  //
-                  // },
                 ),
                 GButton(
                   icon: Icons.countertops,
@@ -125,11 +126,6 @@ class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
                   onPressed: () {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => Indian()));
-//
-                    // Navigator.pushReplacement(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => MytestApp()),
-                    // );
                   },
                 ),
                 GButton(
@@ -140,34 +136,26 @@ class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
                   textColor: Colors.blue[500],
                   iconActiveColor: Colors.blue[600],
                   onPressed: () {
-                     Navigator.pushReplacement(
-                       context,
-                       MaterialPageRoute(builder: (context) => SettingPage()),
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => SettingPage()),
                     );
                   },
                 ),
               ],
               selectedIndex: 1,
-              // onTabChange: (index) {
-              //   setState(() {
-              //     _selectedIndex = index;
-              //   });
-              // },
             ),
           ),
         ),
       ),
-
-    );}
-
-
+    );
+  }
 
   ExpansionTile buildExpansionTile(Countries item, int index) {
     return ExpansionTile(
-
       leading: item.countryCode.length == 2
           ? CountryPickerUtils.getDefaultFlagImage(
-          Country(isoCode: item.countryCode))
+              Country(isoCode: item.countryCode))
           : Text(''),
       title: Text('${item.country}'),
       trailing: Text('${formatter.format(item.confirmed)}'),
@@ -195,6 +183,7 @@ class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
       ],
     );
   }
+
   Widget buildDetailText({int count, Color color, String text}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -204,11 +193,4 @@ class _Cont extends State<Cont> with SingleTickerProviderStateMixin{
       ),
     );
   }
-
-
-
-
-
 }
-
-

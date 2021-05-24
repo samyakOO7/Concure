@@ -1,8 +1,4 @@
 import 'package:covid19_tracker/model/config.dart';
-import 'package:covid19_tracker/model/countries.dart';
-import 'package:covid19_tracker/screens/Countries.dart';
-import 'package:covid19_tracker/screens/Indian.dart';
-import 'package:covid19_tracker/screens/SettingPage.dart';
 import 'package:covid19_tracker/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -19,7 +15,6 @@ class MyApp extends StatefulWidget {
 class _MyApp extends State<MyApp> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     currentTheme.addListener(() {
       print("Changed");
@@ -44,7 +39,6 @@ class _MyApp extends State<MyApp> {
       ),
       themeMode: currentTheme.currentTheme(),
       home: DashboardScreen(),
-
     );
   }
 
