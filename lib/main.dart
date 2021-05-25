@@ -1,5 +1,7 @@
 import 'package:covid19_tracker/model/config.dart';
+import 'package:covid19_tracker/screens/SettingPage.dart';
 import 'package:covid19_tracker/screens/dashboard.dart';
+import 'package:covid19_tracker/screens/slot.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import "package:hive_flutter/hive_flutter.dart";

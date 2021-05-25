@@ -1,3 +1,5 @@
+
+import 'package:covid19_tracker/model/constants.dart';
 import 'package:covid19_tracker/model/covid19_dashboard.dart';
 import 'package:covid19_tracker/screens/Countries.dart';
 import 'package:covid19_tracker/screens/Indian.dart';
@@ -6,6 +8,7 @@ import 'package:covid19_tracker/screens/graphs.dart';
 import 'package:covid19_tracker/screens/graphsline.dart';
 
 import 'package:covid19_tracker/services/networking.dart';
+// import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -94,157 +97,163 @@ class _DashboardScreenState extends State<DashboardScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // actions: <Widget>[
+        //   IconButton(icon: Icon(Theme.of(context).brightness==Brightness.light?Icons.lightbulb_outline:Icons.highlight), onPressed: (){
+        //     DynamicTheme.of(context).setBrightness(Theme.of(context).brightness==Brightness.light?Brightness.dark:Brightness.light);
+        //   },
+        //   ),
+        // ],
         title: Text('Concure'),
       ),
       body: data == null
           ? Center(child: CircularProgressIndicator())
           : RefreshIndicator(
-              onRefresh: getData,
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  SliverGrid(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1.5,
+        onRefresh: getData,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverGrid(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1.5,
+              ),
+              delegate: SliverChildListDelegate([
+                buildSummerCard(
+                    text: 'Confirmed',
+                    color: constant().getcolor(),
+                    count: data.confirmed),
+                buildSummerCard(
+                    text: 'Active',
+                    color: Colors.blue,
+                    count: data.active),
+                buildSummerCard(
+                    text: 'Recovered',
+                    color: Colors.lightGreen,
+                    count: data.recovered),
+                buildSummerCard(
+                    text: 'Deaths',
+                    color: Colors.red,
+                    count: data.deaths),
+              ]),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Center(
+                      child: Text('Result date: ${data.date}'),
                     ),
-                    delegate: SliverChildListDelegate([
-                      buildSummerCard(
-                          text: 'Confirmed',
-                          color: Colors.black,
-                          count: data.confirmed),
-                      buildSummerCard(
-                          text: 'Active',
-                          color: Colors.blue,
-                          count: data.active),
-                      buildSummerCard(
-                          text: 'Recovered',
-                          color: Colors.green,
-                          count: data.recovered),
-                      buildSummerCard(
-                          text: 'Deaths',
-                          color: Colors.red,
-                          count: data.deaths),
-                    ]),
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: Center(
-                            child: Text('Result date: ${data.date}'),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        AspectRatio(
-                          aspectRatio: 1,
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18)),
-                            color: const Color(0xff81e5cd),
-                            child: Stack(
+                  )
+                ],
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  AspectRatio(
+                    aspectRatio: 1,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18)),
+                      color: const Color(0xff81e5cd),
+                      child: Stack(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: <Widget>[
-                                      Text(
-                                        'Covid Infection in India',
-                                        style: TextStyle(
-                                            color: const Color(0xff0f4a3c),
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 4,
-                                      ),
-                                      Text(
-                                        'Daily Cases from last 7 days',
-                                        style: TextStyle(
-                                            color: const Color(0xff379982),
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 38,
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: BarChart(
-                                            mainBarData(),
-                                            swapAnimationDuration: animDuration,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 12,
-                                      ),
-                                    ],
+                                Text(
+                                  'Covid Infection in India',
+                                  style: TextStyle(
+                                      color: const Color(0xff0f4a3c),
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                Text(
+                                  'Daily Cases from last 7 days',
+                                  style: TextStyle(
+                                      color: const Color(0xff379982),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(
+                                  height: 38,
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: BarChart(
+                                      mainBarData(),
+                                      swapAnimationDuration: animDuration,
+                                    ),
                                   ),
+                                ),
+                                const SizedBox(
+                                  height: 12,
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate(
-                      [
-                        AspectRatio(
-                          aspectRatio: 6,
-                          //  child: Text('Siddhant '),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => GraphsLine()),
-                              );
-                            },
-                            child: Container(
-                                decoration: BoxDecoration(
-                                    color: Color(0xff202c3b),
-                                    borderRadius: BorderRadius.circular(30)),
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 10),
-                                margin: EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text('  More Details',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        )),
-                                    Icon(
-                                      Icons.arrow_forward,
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                )),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  AspectRatio(
+                    aspectRatio: 6,
+                    //  child: Text('Siddhant '),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GraphsLine()),
+                        );
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: constant.downbar,
+                              borderRadius: BorderRadius.circular(30)),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('  More Details',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -359,13 +368,13 @@ class _DashboardScreenState extends State<DashboardScreen>
   final formatter = NumberFormat.decimalPattern('en-US');
 
   BarChartGroupData makeGroupData(
-    int x,
-    double y, {
-    bool isTouched = false,
-    Color barColor = Colors.white,
-    double width = 22,
-    List<int> showTooltips = const [],
-  }) {
+      int x,
+      double y, {
+        bool isTouched = false,
+        Color barColor = Colors.white,
+        double width = 22,
+        List<int> showTooltips = const [],
+      }) {
     return BarChartGroupData(
       x: x,
       barRods: [
@@ -385,32 +394,32 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   List<BarChartGroupData> showingGroups() => List.generate(7, (i) {
-        switch (i) {
-          case 0:
-            return makeGroupData(0, d1.toDouble(),
-                isTouched: i == touchedIndex);
-          case 1:
-            return makeGroupData(1, d2.toDouble(),
-                isTouched: i == touchedIndex);
-          case 2:
-            return makeGroupData(2, d3.toDouble(),
-                isTouched: i == touchedIndex);
-          case 3:
-            return makeGroupData(3, d4.toDouble(),
-                isTouched: i == touchedIndex);
-          case 4:
-            return makeGroupData(4, d5.toDouble(),
-                isTouched: i == touchedIndex);
-          case 5:
-            return makeGroupData(5, d6.toDouble(),
-                isTouched: i == touchedIndex);
-          case 6:
-            return makeGroupData(6, d7.toDouble(),
-                isTouched: i == touchedIndex);
-          default:
-            return throw Error();
-        }
-      });
+    switch (i) {
+      case 0:
+        return makeGroupData(0, d1.toDouble(),
+            isTouched: i == touchedIndex);
+      case 1:
+        return makeGroupData(1, d2.toDouble(),
+            isTouched: i == touchedIndex);
+      case 2:
+        return makeGroupData(2, d3.toDouble(),
+            isTouched: i == touchedIndex);
+      case 3:
+        return makeGroupData(3, d4.toDouble(),
+            isTouched: i == touchedIndex);
+      case 4:
+        return makeGroupData(4, d5.toDouble(),
+            isTouched: i == touchedIndex);
+      case 5:
+        return makeGroupData(5, d6.toDouble(),
+            isTouched: i == touchedIndex);
+      case 6:
+        return makeGroupData(6, d7.toDouble(),
+            isTouched: i == touchedIndex);
+      default:
+        return throw Error();
+    }
+  });
 
   BarChartData mainBarData() {
     return BarChartData(

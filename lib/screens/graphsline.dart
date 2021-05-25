@@ -36,44 +36,19 @@ class _GraphsLineState extends State<GraphsLine> {
 
   dynamic daily7;
   bool isShowingMainData;
-  st.Stack <FlSpot> stgreen;
-  st.Stack <FlSpot> stred;
-  int getdate(String s)
-  {
-
-
+  st.Stack<FlSpot> stgreen;
+  st.Stack<FlSpot> stred;
+  int getdate(String s) {
     int first = int.parse(s[8]);
     int second = int.parse(s[9]);
     if (first == 3) {
-      return 30 ;
-    } else if(first==2)
-      return 20+second;
-    else if (first==1)
-      return 10+second;
-    else return second;
-
-
-    // int len = s.length;
-    //   print("given date is "+s);
-    //
-    // int secondlast = int.parse(s[len-2]);
-    // int last = int.parse(s[len-1]);
-    // // print("second last is "+secondlast.toString() );
-    // // print("last is "+last.toString());
-    // if(secondlast==3)
-    //   return 30;
-    // else if(secondlast ==2)
-    //   {
-    //     print("return here");
-    //     (20+last).toInt();
-    //
-    //   }
-    // else if(secondlast ==1)
-    //   {
-    //     (10+last).toInt();
-    //   }
-    // else
-    //   return last.toInt();
+      return 30;
+    } else if (first == 2)
+      return 20 + second;
+    else if (first == 1)
+      return 10 + second;
+    else
+      return second;
   }
 
   Future<void> getDatamonthly() async {
@@ -83,13 +58,14 @@ class _GraphsLineState extends State<GraphsLine> {
     dataList.removeRange(0, 337);
     int month = 1;
     stgreen = st.Stack<FlSpot>();
-    stred= st.Stack<FlSpot>();
+    stred = st.Stack<FlSpot>();
 
     greenspots = new List<FlSpot>();
     blackspots = new List<FlSpot>();
     redspots = new List<FlSpot>();
 
-    int lastmonth = getmonth(dataList[dataList.length-1]['dateymd']);;
+    int lastmonth = getmonth(dataList[dataList.length - 1]['dateymd']);
+    ;
 
     // print(dataList);
 
@@ -99,50 +75,39 @@ class _GraphsLineState extends State<GraphsLine> {
     greenspotsformonth = new List<FlSpot>();
     redspotsformonth = new List<FlSpot>();
 
-
-
-    for (int i = dataList.length - 1 ; i >=0; i--) {
+    for (int i = dataList.length - 1; i >= 0; i--) {
       month = getmonth(dataList[i]['dateymd']);
 
       if (month != lastmonth) {
         // print("FOR MONTH " + lastmonth.toString());
 
-        while(stgreen.isEmpty==false)
-          {
-            greenspotsformonth.add(stgreen.pop());
-          }
-        while(stred.isEmpty==false)
-        {
+        while (stgreen.isEmpty == false) {
+          greenspotsformonth.add(stgreen.pop());
+        }
+        while (stred.isEmpty == false) {
           redspotsformonth.add(stred.pop());
         }
 
-            break;
+        break;
       }
-        tempred = int.parse(dataList[i]['dailyconfirmed']);
-    temp = int.parse(dataList[i]['dailyrecovered']);
-    int date = getdate(dataList[i]['dateymd']);
-    // print("date is "+date.toString());
+      tempred = int.parse(dataList[i]['dailyconfirmed']);
+      temp = int.parse(dataList[i]['dailyrecovered']);
+      int date = getdate(dataList[i]['dateymd']);
+      // print("date is "+date.toString());
 
       FlSpot fl = new FlSpot(
-            double.parse(date.toString()), double.parse(temp.toString()));
+          double.parse(date.toString()), double.parse(temp.toString()));
       stgreen.push(fl);
       FlSpot fl2 = new FlSpot(
           double.parse(date.toString()), double.parse(tempred.toString()));
 
       stred.push(fl2);
-
-
-
     }
     //   print("length is  "+greenspotsformonth.length.toString());
     // print('Here EVERYTHING IS GOOD');
 
     setState(() {});
   }
-
-
-
-
 
   Future<void> getData() async {
     response = await http.get('https://api.covid19india.org/data.json');
@@ -168,18 +133,16 @@ class _GraphsLineState extends State<GraphsLine> {
       if (month != lastmonth) {
         print("FOR MONTH " + lastmonth.toString());
 
-
         FlSpot fl = new FlSpot(
             double.parse(lastmonth.toString()), double.parse(temp.toString()));
         greenspots.add(fl);
 
-
-        FlSpot fl2 = new FlSpot(
-            double.parse(lastmonth.toString()), double.parse(tempred.toString()));
+        FlSpot fl2 = new FlSpot(double.parse(lastmonth.toString()),
+            double.parse(tempred.toString()));
         redspots.add(fl2);
 
-        FlSpot fl3 = new FlSpot(
-            double.parse(lastmonth.toString()), double.parse(tempdeath.toString()));
+        FlSpot fl3 = new FlSpot(double.parse(lastmonth.toString()),
+            double.parse(tempdeath.toString()));
         blackspots.add(fl3);
 
         temp = 0;
@@ -199,14 +162,13 @@ class _GraphsLineState extends State<GraphsLine> {
         double.parse(month.toString()), double.parse(temp.toString()));
     greenspots.add(fl);
 
-
     FlSpot fl2 = new FlSpot(
         double.parse(month.toString()), double.parse(tempred.toString()));
     redspots.add(fl2);
     FlSpot fl3 = new FlSpot(
         double.parse(month.toString()), double.parse(tempdeath.toString()));
     blackspots.add(fl3);
-    print("length of green spots "+greenspots.length.toString());
+    print("length of green spots " + greenspots.length.toString());
     print(greenspots);
     setState(() {});
   }
@@ -253,28 +215,28 @@ class _GraphsLineState extends State<GraphsLine> {
             height: 37,
           ),
           Expanded(
-            child: segmentedControlGroupValue==0 ? (greenspots == null
-                ? Center(child: CircularProgressIndicator())
-                : Padding(
-                    padding: const EdgeInsets.only(right: 16.0, left: 6.0),
-                    child: LineChart(
-                      sampleData1(),
-                      // swapAnimationDuration: const Duration(milliseconds: 250),
-                    ),
-                  )
-          ):
-            (greenspotsformonth == null
-                ? Center(child: CircularProgressIndicator())
-                : Padding(
-              padding: const EdgeInsets.only(right: 16.0, left: 6.0),
-              child: LineChart(
-                sampleData2(),
-                swapAnimationDuration: const Duration(milliseconds: 250),
-              ),
-            )
-            )
-          ),
-
+              child: segmentedControlGroupValue == 0
+                  ? (greenspots == null
+                  ? Center(child: CircularProgressIndicator())
+                  : Padding(
+                padding:
+                const EdgeInsets.only(right: 16.0, left: 6.0),
+                child: LineChart(
+                  sampleData1(),
+                  // swapAnimationDuration: const Duration(milliseconds: 250),
+                ),
+              ))
+                  : (greenspotsformonth == null
+                  ? Center(child: CircularProgressIndicator())
+                  : Padding(
+                padding:
+                const EdgeInsets.only(right: 16.0, left: 6.0),
+                child: LineChart(
+                  sampleData2(),
+                  swapAnimationDuration:
+                  const Duration(milliseconds: 250),
+                ),
+              ))),
           const SizedBox(
             height: 10,
           ),
@@ -426,7 +388,7 @@ class _GraphsLineState extends State<GraphsLine> {
                 return '2000k';
               case 3000000:
                 return '3000k';
-              // return '30k';
+            // return '30k';
               case 4000000:
                 return '4000k';
               case 5000000:
@@ -511,14 +473,6 @@ class _GraphsLineState extends State<GraphsLine> {
     ];
   }
 
-
-
-
-
-
-
-
-
   LineChartData sampleData2() {
     return LineChartData(
       // backgroundColor: Colors.black54,
@@ -563,8 +517,6 @@ class _GraphsLineState extends State<GraphsLine> {
 
               case 30:
                 return '30';
-
-
             }
             return '';
           },
@@ -578,7 +530,6 @@ class _GraphsLineState extends State<GraphsLine> {
           ),
           getTitles: (value) {
             switch (value.toInt()) {
-
               case 200000:
                 return '200k';
               case 300000:
@@ -587,18 +538,17 @@ class _GraphsLineState extends State<GraphsLine> {
                 return '400k';
               case 500000:
                 return '500k';
-                case 600000:
-              return '600k';
+              case 600000:
+                return '600k';
               case 250000:
                 return '250k';
               case 350000:
                 return '350k';
-                // return '350k';
+            // return '350k';
               case 450000:
                 return '450k';
               case 550000:
                 return '550k';
-
             }
             return '';
           },
@@ -635,7 +585,6 @@ class _GraphsLineState extends State<GraphsLine> {
     );
   }
 
-
   List<LineChartBarData> linesBarData2() {
     LineChartBarData lineChartBarData1 = LineChartBarData(
       spots: redspotsformonth,
@@ -665,14 +614,10 @@ class _GraphsLineState extends State<GraphsLine> {
       ]),
     );
 
-
     return [
       lineChartBarData1,
       lineChartBarData2,
       // lineChartBarData3,
     ];
   }
-
-
-
 }
