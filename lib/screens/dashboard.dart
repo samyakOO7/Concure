@@ -6,6 +6,7 @@ import 'package:covid19_tracker/screens/graphs.dart';
 import 'package:covid19_tracker/screens/graphsline.dart';
 
 import 'package:covid19_tracker/services/networking.dart';
+// import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -94,6 +95,12 @@ class _DashboardScreenState extends State<DashboardScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // actions: <Widget>[
+        //   IconButton(icon: Icon(Theme.of(context).brightness==Brightness.light?Icons.lightbulb_outline:Icons.highlight), onPressed: (){
+        //     DynamicTheme.of(context).setBrightness(Theme.of(context).brightness==Brightness.light?Brightness.dark:Brightness.light);
+        //   },
+        //   ),
+        // ],
         title: Text('Concure'),
       ),
       body: data == null

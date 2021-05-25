@@ -1,5 +1,6 @@
 import 'dart:async';
 
+
 import 'package:covid19_tracker/model/config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,83 +12,108 @@ import 'Indian.dart';
 import 'dashboard.dart';
 
 class SettingPage extends StatefulWidget {
-  _SettingPage createState() => _SettingPage();
+  _SettingPage createState()=>_SettingPage();
 }
 
 class _SettingPage extends State<SettingPage> {
-  bool isSwitched = false;
-  Future<bool> Savesettings(bool swit) async {
+  var isSwitched=false;
+  Future<bool>Savesettings(bool swit) async {
     // TODO: implement initState
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isSwitched', swit);
-    print("hello" + isSwitched.toString());
+    prefs.setBool('isSwitched', isSwitched);
 
     return prefs.commit();
   }
 
-  Future<bool> Getsettings() async {
+  Future<bool> Getsettings() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    isSwitched = prefs.getBool('isSwitched');
+    isSwitched=prefs.getBool('isSwitched');
     return isSwitched;
   }
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    setState(() {
-      Getsettings().then(update);
-    });
-  }
 
+    Getsettings().then(update);
+  }
   FutureOr update(bool value) {
     setState(() {
-      isSwitched = value;
-      print(" hello 2 " + isSwitched.toString());
+      isSwitched=value;
     });
   }
-
   @override
   Widget build(BuildContext context) {
+    // Icon blub = IconDa(Icons.lightbulb, size: 35,);
+      IconData blub2 = Icons.lightbulb;
+      IconData blub = Icons.highlight;
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Concure'),
       ),
-      body: Container(
-        child: Column(
+      body:Container(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Set Dark Mode",
-                    style: TextStyle(fontSize: 20),
-                  ),
-                
+            Text("Set Dark Mode",style: TextStyle(fontSize: 20),),
+            Padding(
+              padding:  EdgeInsets.all(20),
+              child: GestureDetector
+                (child: Icon(isSwitched?blub:blub2,size: 35,), onTap: (){
 
-                  // Switch(value: null, onChanged: null),
-                  // Switch(
-                  //     // value: isSwitched,
-                  //     // onChanged: (value) {
-                  //     //   isSwitched = value;
-                  //     //   currentTheme.switchTheme();
-                  //     //   setState(() {
-                  //     //     Savesettings(isSwitched);
-                  //     //   });
-                  //     // },
-                  //     // activeColor: Colors.orange,
-                  //     // activeTrackColor: Colors.orangeAccent,
-                  //     )
-                ],
+                  if(isSwitched==false)
+                    {
+                      isSwitched = true;
+
+
+                    }
+                  else
+                    {
+                      isSwitched = false;
+
+
+
+                    }
+                  currentTheme.switchTheme();
+                  Savesettings(isSwitched);
+
+
+
+
+              },
               ),
-            )
+            ),
+
+
+
+
+            // Switch(
+            //   value: isSwitched,
+            //   onChanged: (value){
+            //
+            //
+            //     isSwitched=value;
+            //     currentTheme.switchTheme();
+            //
+            //     Savesettings(isSwitched);
+            //
+            //
+            //   },
+            //   activeColor: Colors.orange,
+            //   activeTrackColor: Colors.orangeAccent,
+            //
+            // )
           ],
         ),
       ),
-      bottomNavigationBar: Container(
+
+
+
+      bottomNavigationBar:  Container(
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -120,12 +146,7 @@ class _SettingPage extends State<SettingPage> {
                   iconActiveColor: Colors.red,
                   iconColor: Colors.red,
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DashboardScreen(),
-                      ),
-                    );
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),),);
                   },
                 ),
                 GButton(
@@ -139,8 +160,9 @@ class _SettingPage extends State<SettingPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Cont()),
-                      );
-                    }),
+                      );}
+
+                ),
                 GButton(
                   icon: Icons.countertops,
                   text: 'States',
@@ -184,5 +206,14 @@ class _SettingPage extends State<SettingPage> {
         ),
       ),
     );
+
+
+
+
+
   }
+
+
+
+
 }
