@@ -38,6 +38,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   fl_chart: ^0.36.1
   stack: ^0.0.1
+  flutter_swiper: ^1.1.6
   rflutter_alert: ^2.0.2
   expandable: ^5.0.1
 
