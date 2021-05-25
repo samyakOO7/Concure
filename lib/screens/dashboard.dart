@@ -1,3 +1,4 @@
+import 'package:covid19_tracker/constants.dart';
 import 'package:covid19_tracker/model/covid19_dashboard.dart';
 import 'package:covid19_tracker/screens/Countries.dart';
 import 'package:covid19_tracker/screens/Indian.dart';
@@ -117,7 +118,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                     delegate: SliverChildListDelegate([
                       buildSummerCard(
                           text: 'Confirmed',
-                          color: Colors.black,
+                          color: constant().getcolor(),
                           count: data.confirmed),
                       buildSummerCard(
                           text: 'Active',
@@ -125,7 +126,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                           count: data.active),
                       buildSummerCard(
                           text: 'Recovered',
-                          color: Colors.green,
+                          color: Colors.lightGreen,
                           count: data.recovered),
                       buildSummerCard(
                           text: 'Deaths',
@@ -223,7 +224,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                             },
                             child: Container(
                                 decoration: BoxDecoration(
-                                    color: Color(0xff202c3b),
+                                    color: constant.downbar,
                                     borderRadius: BorderRadius.circular(30)),
                                 padding: EdgeInsets.symmetric(
                                     vertical: 10, horizontal: 10),

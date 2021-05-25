@@ -1,6 +1,7 @@
 import 'dart:async';
 
 
+import 'package:covid19_tracker/constants.dart';
 import 'package:covid19_tracker/model/config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Countries.dart';
 import 'Indian.dart';
+
 import 'dashboard.dart';
 
 class SettingPage extends StatefulWidget {
@@ -68,12 +70,16 @@ class _SettingPage extends State<SettingPage> {
                   if(isSwitched==false)
                     {
                       isSwitched = true;
+                      print("HERE make ");
+
+                      constant().setcolor(Colors.white,Colors.cyan);
 
 
                     }
                   else
                     {
                       isSwitched = false;
+                      constant().setcolor(Colors.black, Color(0xff202c3b));
 
 
 
