@@ -3,6 +3,7 @@ import 'package:covid19_tracker/model/serializers.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
 class Networking {
   Future<Covid19Dashboard> getDashboardData() async {
     Covid19Dashboard _dashboardResult;
