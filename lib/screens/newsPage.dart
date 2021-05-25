@@ -1,106 +1,116 @@
-import 'dart:async';
+import 'dart:convert';
 
-import 'package:covid19_tracker/model/config.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'Countries.dart';
 import 'Indian.dart';
 import 'dashboard.dart';
-import 'newsPage.dart';
+import 'details.dart';
 
-class SettingPage extends StatefulWidget {
-  _SettingPage createState() => _SettingPage();
+class HomePage extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
 }
 
-class _SettingPage extends State<SettingPage> {
-  bool isSwitched = false;
-  Future<bool> Savesettings(bool swit) async {
-    // TODO: implement initState
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isSwitched', swit);
-    print("hello" + isSwitched.toString());
-
-    return prefs.commit();
-  }
-
-  Future<bool> Getsettings() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    isSwitched = prefs.getBool('isSwitched');
-    return isSwitched;
-  }
-
+class _MyAppState extends State<HomePage> {
   @override
   void initState() {
-    // TODO: implement initState
+    //TODO: implement initState
     super.initState();
-
-    setState(() {
-      Getsettings().then(update);
-    });
+    fetch();
   }
 
-  FutureOr update(bool value) {
+  List data;
+
+  Future<String> fetch() async {
+    var jsondata = await http.get(
+        "https://newsapi.org/v2/top-headlines?category=health&apiKey=ca8ac2d63c8e447d91b08beb42b7a2f5&language=en&q=covid");
+
+    var fetchdata = jsonDecode(jsondata.body);
     setState(() {
-      isSwitched = value;
-      print(" hello 2 " + isSwitched.toString());
+      data = fetchdata["articles"];
     });
+
+    return "Success";
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Concure'),
+        centerTitle: true,
+        title: Text('Covid News'),
       ),
-      body: Container(
-        child: Column(
-          children: [
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        "Set Dark Mode",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      ElevatedButton(
-                        child: Text('News Page'),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        },
-                      ),
-                    ],
+      body: Swiper(
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DetailsPage(
+                        title: data[index]["title"],
+                        author: (data[index]["author"])==null?"Author" : data[index]["author"] ,
+                        description: data[index]["description"],
+                        publishedAt: data[index]["publishedAt"],
+                        urlToImage: data[index]["urlToImage"],
+                      )));
+            },
+            child: Stack(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(35.0),
+                      topRight: Radius.circular(35.0),
+                    ),
+                    child: Image.network(
+                      data[index]["urlToImage"],
+                      fit: BoxFit.cover,
+                      height: 400.0,
+                    ),
                   ),
-
-                
-
-                  // Switch(value: null, onChanged: null),
-                  // Switch(
-                  //     // value: isSwitched,
-                  //     // onChanged: (value) {
-                  //     //   isSwitched = value;
-                  //     //   currentTheme.switchTheme();
-                  //     //   setState(() {
-                  //     //     Savesettings(isSwitched);
-                  //     //   });
-                  //     // },
-                  //     // activeColor: Colors.orange,
-                  //     // activeTrackColor: Colors.orangeAccent,
-                  //     )
-                ],
-              ),
-            )
-          ],
-        ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0.0, 350.0, 0.0, 0.0),
+                  child: Container(
+                    height: 200.0,
+                    width: 400.0,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(35.0),
+                      elevation: 10.0,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                            EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 20.0),
+                            child: Text(
+                              data[index]["title"],
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "Tap for more information!",
+                            style: TextStyle(color: Colors.blue),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+        itemCount: data == null ? 0 : data.length,
+        viewportFraction: 0.8,
+        scale: 0.9,
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
