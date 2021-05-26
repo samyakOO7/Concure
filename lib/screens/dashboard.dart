@@ -18,6 +18,8 @@ import 'package:http/http.dart' as http;
 
 import 'package:google_nav_bar/google_nav_bar.dart';
 
+import 'slot.dart';
+
 class DashboardScreen extends StatefulWidget {
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -237,6 +239,53 @@ class _DashboardScreenState extends State<DashboardScreen>
                             children: <Widget>[
                               Text('  More Details',
                                   style: TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  AspectRatio(
+                    aspectRatio: 6,
+                    //  child: Text('Siddhant '),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VaccinebyPin()),
+                        );
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: constant.downbar,
+                              borderRadius: BorderRadius.circular(30)),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('  Vaccinator',
+                                  style: TextStyle(
+                                    // letterSpacing: 0
+                                    fontSize: 17,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   )),
