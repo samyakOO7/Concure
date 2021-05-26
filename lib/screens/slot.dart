@@ -1,11 +1,11 @@
-import 'dart:convert';
 
 
-import 'package:covid19_tracker/screens/Indian.dart';
+
 import 'package:covid19_tracker/screens/slot_booking.dart';
-import 'package:expandable/expandable.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -34,6 +34,7 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
   String date="";
   String pincode="";
   String t="";
+  var no_slots;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,22 +158,86 @@ SizedBox(height: 20,),
 
             Expanded(
               child: Center(
-                child: (cn==null) ? Text("Enter PinCode"):
+                child:
                 ListView.builder(
                     itemCount: cn==null?0:cn.length,
                     itemBuilder: (BuildContext context, int index) {
-                      Centers cdata=cn[index];
-                      List<Session> s=cdata.sessions;
-                      List<VaccineFee> v=cdata.vaccineFees;
-                      int i=0;
-                      Session sdata=s[i];
-                      i<=s.length?++i:0;
-                      return  Container(
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: ExpandableNotifier(// <-- Provides ExpandableController to its children
-                              child: Row(
+                      Centers cdata = cn[index];
+                      List<Session> s = cdata.sessions;
+                      List<VaccineFee> v = cdata.vaccineFees;
+                      int i = 0;
+
+                      Session sdata = s[i];
+                      i <= s.length ? ++i : 0;
+                      int slots=sdata.slots.length;
+                      return Container(
+                          child: Center(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child:
+                                  new Container(
+
+                                      child: ExpansionTile(
+
+                                        title: Text(
+                                          cdata.name,
+                                          style: TextStyle(
+
+                                              fontSize: 16.0, fontWeight: FontWeight.w500),
+                                        ),
+                                      children: <Widget>[
+
+                                          ListTile(
+                                          title: Text(
+                                          cdata.districtName+", "+cdata.stateName+", "+cdata.pincode.toString(),
+                                    style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.red),
+                                  ),),
+                                        ListTile(
+                                          title: Text(
+                                          sdata.date + ", " +sdata.minAgeLimit.toString() + ", " +sdata.vaccine  ,
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.red),
+                                          ),),
+
+                                        ListTile(
+                                          title: Container(
+                                            child: Column(
+                                              children:<Widget>[
+                                            Text("Time slots", style: TextStyle(
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.red),),
+                                                SizedBox(height: 10,),
+                                                SingleChildScrollView(
+                                                  scrollDirection: Axis.horizontal,
+                                                  child: Row(
+
+                                                    children: <Widget>[
+                                                     Text(
+                                                         sdata.slots[index],
+                                                    style: TextStyle(
+                                                        fontSize: 15.0,
+                                                        fontWeight: FontWeight.w700,
+                                                        color: Colors.red),),
+
+                                                    ],
+                                                  ),
+
+                                                ),
+
+                                              ]
+                                            ),
+                                          ),),
+                                      ],)
+
+                                  ),
+                                  /*ExpandableNotifier(// <-- Provides ExpandableController to its children
+                              child: Column(
                                 children: [
                                   SizedBox(
                                     width:MediaQuery.of(context).size.width-60.5,
@@ -187,11 +252,11 @@ SizedBox(height: 20,),
                                           children: [
                                             Padding(
                                                 padding: MediaQuery.of(context).padding,
-                                                child: Row(
+                                                child: Column(
                                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                                   children: <Widget>[
                                                     Container(
-                                                        child: Row(
+                                                        child: Column(
                                                             children: [
                                                               IconButton(
                                                                 icon: Icon(Icons.coronavirus),
@@ -256,29 +321,20 @@ SizedBox(height: 20,),
                                           ]
                                       ),
                                     ),
-                                  ),
-                                  Divider(
-                                    height: 20,
-                                    thickness: 5,
-                                    indent: 20,
-                                    endIndent: 20,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
+                                  ),*/
+
+
+
+                              )
+                          )
                       );
-                      //   ListTile(
-                      //   title: Text('${cdata.name}'),
-                      // );
-                    }
-                ),
-              ),
-            ),
-          ],
-        ),
-      ), //Center
-    );
+                    } )
+    )
+    )])));}
+
+
+
   }
-}
+
+
+

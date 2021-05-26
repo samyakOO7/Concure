@@ -1,8 +1,11 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:covid19_tracker/model/config.dart';
 import 'package:covid19_tracker/screens/SettingPage.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
@@ -25,8 +28,11 @@ class _Indian extends State<Indian> {
   var url =
       "https://api.apify.com/v2/key-value-stores/toDWvRj1JpTXiM8FF/records/LATEST?disableRedirect=true";
   List data;
-
-
+  int touchedIndex = -1;
+var sumall;
+double per_activ;
+double per_rec;
+double per_inf;
   static String active,
       totalRecovered,
       nRec,
@@ -66,7 +72,9 @@ class _Indian extends State<Indian> {
       body:data==null?Center(child: CircularProgressIndicator()): ListView.builder(
           itemCount: data == null ? 0 : data.length,
           itemBuilder: (BuildContext context, int index) {
+
       title = data[index]['region'].toString();
+
       active = data[index]['activeCases'].toString();
       totalRecovered = data[index]['recovered'].toString();
       nRec = data[index]['newRecovered'].toString();
@@ -76,6 +84,10 @@ class _Indian extends State<Indian> {
       tinfec = data[index]['totalInfected'].toString();
       nInfec = data[index]['newInfected'].toString();
 
+      sumall=data[index]['activeCases']+data[index]['recovered']+data[index]['totalInfected'];
+      per_activ=(data[index]['activeCases']/sumall)*100;
+      per_inf=(data[index]['totalInfected']/sumall)*100;
+      per_rec=(data[index]['recovered']/sumall)*100;
 
 
     return new Container(
@@ -83,7 +95,7 @@ class _Indian extends State<Indian> {
     child: new Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: <Widget>[
-    new Card(
+    new Container(
 
     child: ExpansionTile(
     title: Text(
@@ -100,7 +112,7 @@ class _Indian extends State<Indian> {
       style: TextStyle(
           fontSize: 16.0,
           fontWeight: FontWeight.w700,
-          color: Colors.red),
+          color: Colors.deepOrangeAccent),
     ),),
     Pan(
 
@@ -112,6 +124,94 @@ class _Indian extends State<Indian> {
     ni: nInfec,
 
     ),
+            Container(
+
+            child: Row(
+            children: <Widget>[
+            const SizedBox(
+            height: 18,
+            ),
+            Expanded(
+            child: AspectRatio(
+            aspectRatio: 1,
+            child: PieChart(
+            PieChartData(
+            pieTouchData: PieTouchData(touchCallback: (pieTouchResponse) {
+            setState(() {
+            final desiredTouch = pieTouchResponse.touchInput is! PointerExitEvent &&
+            pieTouchResponse.touchInput is! PointerUpEvent;
+            if (desiredTouch && pieTouchResponse.touchedSection != null) {
+              touchedIndex = pieTouchResponse.touchedSection.touchedSectionIndex;
+            } else {
+            touchedIndex = -1;
+            }
+            });
+            }),
+            borderData: FlBorderData(
+            show: false,
+            ),
+            sectionsSpace: 0,
+            centerSpaceRadius: 40,
+            sections: showingSections()),
+            ),
+            ),
+            ),
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:  <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                    Container(
+                      margin: EdgeInsets.only(right: 4),
+                      color: Colors.red,
+                      width: 10,
+                      height: 10,
+
+                    ),
+                    Text("Active cases"),
+
+                  ],),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  Container(
+                    margin: EdgeInsets.only(right: 4),
+                    color: Colors.blue,
+                    width: 10,
+                    height: 10,
+
+                  ),
+                  Text("Infected"),
+                ],),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                  Container(
+                    margin: EdgeInsets.only(right: 4),
+                    color: Colors.green,
+                    width: 10,
+                    height: 10,
+
+                  ),
+                  Text("Recovered"),
+
+                ],),
+
+
+
+
+                ],
+              ),
+            const SizedBox(
+            width: 28,
+            ),
+            ],
+            ),
+            ),
 
     ],
     ),),
@@ -231,6 +331,46 @@ class _Indian extends State<Indian> {
     ),
     );
     }
+  List<PieChartSectionData> showingSections() {
+    return List.generate(3, (i) {
+      final isTouched = i == touchedIndex;
+      final fontSize = isTouched ? 25.0 : 16.0;
+      final radius = isTouched ? 60.0 : 50.0;
+
+      switch (i) {
+        case 0:
+          return PieChartSectionData(
+            color:  Colors.red,
+            value: per_activ,
+            title: per_activ.toStringAsFixed(1),
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+        case 1:
+          return PieChartSectionData(
+            color:  Colors.blue,
+            value: per_inf,
+            title: per_inf.toStringAsFixed(1),
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+        case 2:
+          return PieChartSectionData(
+            color:  Colors.green,
+            value: per_rec,
+            title: per_rec.toStringAsFixed(1),
+            radius: radius,
+            titleStyle: TextStyle(
+                fontSize: fontSize, fontWeight: FontWeight.bold, color: const Color(0xffffffff)),
+          );
+
+        default:
+          throw Error();
+      }
+    });
+  }
 
     }
 
@@ -259,25 +399,25 @@ class _Indian extends State<Indian> {
     ),
     StatusPanel2(
     // panelColor: Colors.blue[100],
-    textColor: Colors.grey[600],
+    textColor: Colors.red[600],
     title: 'Total Deceased',
     count: nd,
     ),
     StatusPanel2(
 
-    textColor: Colors.grey[600],
+    textColor: Colors.red[600],
     title: 'Newly Deceased',
     count: nd,
     ),
     StatusPanel2(
 
-    textColor: Colors.red,
+    textColor: Colors.blue,
     title: 'Total Infected',
     count: ti,
     ),
     StatusPanel2(
     // panelColor: Colors.blue[100],
-    textColor:Colors.red ,
+    textColor:Colors.blue ,
     title: 'Newly Infected',
     count: ni,
     ),
@@ -285,6 +425,7 @@ class _Indian extends State<Indian> {
     ),
     );
     }
+
 
 
 // static String active, totalRecovered, nRec, tdecre, nDecre, tinfec, nInfec,title;
