@@ -1,7 +1,5 @@
 import 'dart:async';
 
-
-
 import 'package:covid19_tracker/model/constants.dart';
 import 'package:covid19_tracker/model/config.dart';
 
@@ -9,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'Countries.dart';
 import 'Indian.dart';
@@ -16,12 +15,13 @@ import 'Indian.dart';
 import 'dashboard.dart';
 
 class SettingPage extends StatefulWidget {
-  _SettingPage createState()=>_SettingPage();
+  _SettingPage createState() => _SettingPage();
 }
 
 class _SettingPage extends State<SettingPage> {
-  var isSwitched=false;
-  Future<bool>Savesettings(bool swit) async {
+  var isSwitched = false;
+
+  Future<bool> Savesettings(bool swit) async {
     // TODO: implement initState
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -30,106 +30,139 @@ class _SettingPage extends State<SettingPage> {
     return prefs.commit();
   }
 
-  Future<bool> Getsettings() async{
+  Future<bool> Getsettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    isSwitched=prefs.getBool('isSwitched');
+    isSwitched = prefs.getBool('isSwitched');
     return isSwitched;
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-setState(() {
-  Getsettings().then(update);
-});
-
-  }
-  FutureOr update(bool value) {
     setState(() {
-      if(value==null)
-        {
-          isSwitched=true;
-        }
-      else
-        {
-      isSwitched=value;}
+      Getsettings().then(update);
     });
   }
+
+  FutureOr update(bool value) {
+    setState(() {
+      if (value == null) {
+        isSwitched = true;
+      } else {
+        isSwitched = value;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // Icon blub = IconDa(Icons.lightbulb, size: 35,);
     IconData blub2 = Icons.lightbulb;
     IconData blub = Icons.highlight;
 
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Concure'),
       ),
-      body:Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Container(
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.values[5],
           children: [
-            Text("Set Dark Mode",style: TextStyle(fontSize: 20),),
-            Padding(
-              padding:  EdgeInsets.all(20),
-              child: GestureDetector
-                (child: Icon(isSwitched?blub:blub2,size: 35,), onTap: (){
+            Card(
+              elevation: 3,
+              child: Row(
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
 
-                if(isSwitched==false)
-                {
-                  isSwitched = true;
-                  // print("HERE make ");
-                  constant().setcolor(Colors.black, Color(0xff202c3b));
+                  Text(
+                    "Set Dark Mode",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(width: 30,),
+                  Padding(
+                    padding: EdgeInsets.all(20),
+                    child: GestureDetector(
+                      child: Icon(
+                        isSwitched ? blub : blub2,
+                        size: 35,
+                      ),
+                      onTap: () {
+                        if (isSwitched == false) {
+                          isSwitched = true;
+                          // print("HERE make ");
+                          constant().setcolor(Colors.black, Color(0xff202c3b));
+                        } else {
+                          isSwitched = false;
 
-
-                }
-                else
-                {
-                  isSwitched = false;
-
-
-                  constant().setcolor(Colors.white,Colors.cyan);
-
-
-                }
-                currentTheme.switchTheme();
-                Savesettings(isSwitched);
-
-
-
-
-              },
+                          constant().setcolor(Colors.white, Colors.cyan);
+                        }
+                        currentTheme.switchTheme();
+                        Savesettings(isSwitched);
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-
-
-
-
-            // Switch(
-            //   value: isSwitched,
-            //   onChanged: (value){
-            //
-            //
-            //     isSwitched=value;
-            //     currentTheme.switchTheme();
-            //
-            //     Savesettings(isSwitched);
-            //
-            //
-            //   },
-            //   activeColor: Colors.orange,
-            //   activeTrackColor: Colors.orangeAccent,
-            //
-            // )
+            SizedBox(
+             height: 50,
+            ),
+            GestureDetector(
+              onTap: () {
+                launch('https://covid19responsefund.org/en/');
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                color: constant.downbar,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text('DONATE ',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: 10,),
+            GestureDetector(
+              onTap: () {
+                launch(
+                    'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters');
+              },
+              child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  color: constant.downbar,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text('MYTH BUSTERS',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                      ),
+                    ],
+                  )),
+            )
           ],
         ),
       ),
-
-
-
-      bottomNavigationBar:  Container(
+      bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -162,7 +195,12 @@ setState(() {
                   iconActiveColor: Colors.red,
                   iconColor: Colors.red,
                   onPressed: () {
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => DashboardScreen(),),);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DashboardScreen(),
+                      ),
+                    );
                   },
                 ),
                 GButton(
@@ -176,9 +214,8 @@ setState(() {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => Cont()),
-                      );}
-
-                ),
+                      );
+                    }),
                 GButton(
                   icon: Icons.countertops,
                   text: 'States',
@@ -222,14 +259,5 @@ setState(() {
         ),
       ),
     );
-
-
-
-
-
   }
-
-
-
-
 }
