@@ -1,3 +1,4 @@
+import 'package:covid19_tracker/model/constants.dart';
 import 'package:covid19_tracker/screens/slot_booking.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -17,13 +18,13 @@ Future<List<Centers>> checkavailabilty1(String p, String d) async {
   var url = Uri.parse(
       'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=${p}&date=${d}');
   var response = await http.get(url);
-  print("res ${response.body}");
+  // print("res ${response.body}");
   if (response.statusCode == 200) {
     var r = covidvaccinebypinFromJson(response.body);
     List<Centers> s = r.centers;
 
-    print("S  is :  " + s.toString());
-    print("hello siddahant " + r.toString());
+    // print("S  is :  " + s.toString());
+    // print("hello siddahant " + r.toString());
     return s;
   } else {
     throw Exception('Unexpected error occured!');
@@ -37,13 +38,17 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
   String date = "";
   String pincode = "";
   String t = "";
+  // bool find = true;
   var no_slots;
+  // static  String click = "OK";
 
   @override
   Widget build(BuildContext context) {
+    Color theme = Colors.green;
+
     return Scaffold(
         appBar: AppBar(
-          title: Text("Get Notified for Vaccine availability"),
+          title: Text("Get Notified for Vaccine"),
           titleSpacing: 00.0,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios_outlined),
@@ -65,7 +70,9 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                     child: Text(
                       "Get notified for vaccine",
                       style: TextStyle(
-                          color: Colors.deepPurpleAccent,
+                          // color: Colors.deepPurpleAccent,
+                        color:theme,
+
                           fontSize: 25,
                           fontWeight: FontWeight.bold),
                     ),
@@ -76,7 +83,8 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                     child: Text(
                       "Enter Pincode",
                       style: TextStyle(
-                          color: Colors.deepPurpleAccent,
+                          // color: Colors.deepPurpleAccent,
+                        color : theme,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -94,7 +102,8 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                     child: Text(
                       "Enter Date",
                       style: TextStyle(
-                          color: Colors.deepPurpleAccent,
+                          // color: Colors.deepPurpleAccent,
+                        color:theme,
                           fontSize: 15,
                           fontWeight: FontWeight.bold),
                     ),
@@ -117,10 +126,12 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                       colorScheme: ColorScheme.dark(
                                         primary: Colors.deepPurpleAccent,
                                         onPrimary: Colors.white,
-                                        surface: Colors.pink,
+                                        // surface: Colors.pink,
+                                        surface: constant.downbar,
                                         onSurface: Colors.yellow,
                                       ),
-                                      dialogBackgroundColor: Colors.green[900],
+                                      // dialogBackgroundColor: Colors.green[900],
+                                      dialogBackgroundColor: constant.downbar,
                                     ),
                                     child: picker,
                                   );
@@ -139,21 +150,83 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                   SizedBox(
                     height: 20,
                   ),
-                  DialogButton(
-                    color: Colors.deepPurpleAccent,
-                    onPressed: () {
+                  // DialogButton(
+                  //   // color: Colors.deepPurpleAccent,
+                  //   color:theme,
+                  //   onPressed: () {
+                  //     t = pincode;
+                  //     pincode = pin.text;
+                  //     date = dateController.text;
+                  //
+                  //
+                  //     print('CLICKED and the value is : '+click);
+                  //     setState(() {
+                  //
+            // checkavailabilty1(pincode, date).then((value) {
+            //   cn = value;
+            //
+            //   click = "Your Centers";
+
+
+            // });
+                  //     });
+                  //   },
+                  // child: Text(
+                  //   click,
+                  //   style: TextStyle(color: Colors.white, fontSize: 20),
+                  // ),
+                  // ),
+                  GestureDetector(
+                    onTap: () async {
+
                       t = pincode;
                       pincode = pin.text;
                       date = dateController.text;
-                      setState(() {
-                        checkavailabilty1(pincode, date).then((value) {
-                          cn = value;
+
+                      // print(click);
+                      setState(() async {
+
+
+                        cn = await checkavailabilty1(pincode, date);
+                        // click = "Your Centers";
+                        // print(click);
+                        setState(() {
+
                         });
-                      });
+
+
+                        // checkavailabilty1(pincode, date). then((value) async {
+                          // await
+                          //   await Future.delayed(Duration(seconds: 4));
+                          // cn = value;
+
+
+
+
+                        // });
+
+
+                      }
+                      );
+
+
+
                     },
-                    child: Text(
-                      "OK",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    child: Container(
+
+                      height: 50,
+                      width: MediaQuery.of(context).size.width-160,
+                      decoration: BoxDecoration(
+                        color: theme,
+                        borderRadius: BorderRadius.circular(40)
+                      ),
+                      child: Center(
+                        child: Text(
+                          "OK",
+                          style: TextStyle(color: Colors.white, fontSize: 23),
+                        ),
+                      ),
+
                     ),
                   ),
                   Expanded(
@@ -170,7 +243,7 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                 i <= s.length ? ++i : 0;
                                 int slots = sdata.slots.length;
 
-                                print("here slots " + sdata.slots.toString());
+                                // print("here slots " + sdata.slots.toString());
 
                                 List<Widget> ls = new List();
 
@@ -220,7 +293,7 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                               sdata.minAgeLimit.toString() +
                                               ", " +
                                               sdata.vaccine+
-                                          "+" +
+                                          "  + " +
                                           sdata.availableCapacity.toString(),
                                           style: TextStyle(
                                               fontSize: 15.0,

@@ -4,11 +4,11 @@ import 'package:covid19_tracker/model/covid19_dashboard.dart';
 import 'package:covid19_tracker/screens/Countries.dart';
 import 'package:covid19_tracker/screens/Indian.dart';
 import 'package:covid19_tracker/screens/SettingPage.dart';
-import 'package:covid19_tracker/screens/graphs.dart';
+
 import 'package:covid19_tracker/screens/graphsline.dart';
 
 import 'package:covid19_tracker/services/networking.dart';
-// import 'package:dynamic_theme/dynamic_theme.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fl_chart/fl_chart.dart';
