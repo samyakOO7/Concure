@@ -80,15 +80,15 @@ setState(() {
                 if(isSwitched==false)
                 {
                   isSwitched = true;
-                  print("HERE make ");
+                  // print("HERE make ");
                   constant().setcolor(Colors.black, Color(0xff202c3b));
-
 
 
                 }
                 else
                 {
                   isSwitched = false;
+
 
                   constant().setcolor(Colors.white,Colors.cyan);
 

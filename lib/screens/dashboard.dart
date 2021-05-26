@@ -4,11 +4,11 @@ import 'package:covid19_tracker/model/covid19_dashboard.dart';
 import 'package:covid19_tracker/screens/Countries.dart';
 import 'package:covid19_tracker/screens/Indian.dart';
 import 'package:covid19_tracker/screens/SettingPage.dart';
-import 'package:covid19_tracker/screens/graphs.dart';
+
 import 'package:covid19_tracker/screens/graphsline.dart';
 
 import 'package:covid19_tracker/services/networking.dart';
-// import 'package:dynamic_theme/dynamic_theme.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -17,6 +17,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:google_nav_bar/google_nav_bar.dart';
+
+import 'slot.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -237,6 +239,53 @@ class _DashboardScreenState extends State<DashboardScreen>
                             children: <Widget>[
                               Text('  More Details',
                                   style: TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  AspectRatio(
+                    aspectRatio: 6,
+                    //  child: Text('Siddhant '),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VaccinebyPin()),
+                        );
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: constant.downbar,
+                              borderRadius: BorderRadius.circular(30)),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('  Vaccinator',
+                                  style: TextStyle(
+                                    // letterSpacing: 0
+                                    fontSize: 17,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   )),

@@ -324,10 +324,14 @@ class _GraphsLineState extends State<GraphsLine> {
     return LineChartData(
       // backgroundColor: Colors.black54,
       lineTouchData: LineTouchData(
+
         touchTooltipData: LineTouchTooltipData(
+
           tooltipBgColor: Colors.blueGrey.withOpacity(0.9),
         ),
-        touchCallback: (LineTouchResponse touchResponse) {},
+        touchCallback: (LineTouchResponse touchResponse) {
+
+        },
         handleBuiltInTouches: true,
       ),
       gridData: FlGridData(

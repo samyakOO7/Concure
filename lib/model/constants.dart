@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class  constant
 {
-  static Color confirmed  = Colors.black54;
-  static Color downbar = Colors.cyan;
+  static Color confirmed  = Colors.black;
+  static Color downbar = Color(0xff202c3b);
   // static Color active , recov, deat;
   setcolor (Color change,Color down)
   {

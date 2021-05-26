@@ -1,8 +1,8 @@
 import 'package:covid19_tracker/model/config.dart';
-import 'package:covid19_tracker/model/countries.dart';
-import 'package:covid19_tracker/screens/Countries.dart';
-import 'package:covid19_tracker/screens/Indian.dart';
-import 'package:covid19_tracker/screens/SettingPage.dart';
+// import 'package:covid19_tracker/model/countries.dart';
+// import 'package:covid19_tracker/screens/Countries.dart';
+// import 'package:covid19_tracker/screens/Indian.dart';
+// import 'package:covid19_tracker/screens/SettingPage.dart';
 import 'package:covid19_tracker/screens/dashboard.dart';
 
 import 'package:flutter/material.dart';

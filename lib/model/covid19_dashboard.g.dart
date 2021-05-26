@@ -2,9 +2,6 @@
 
 part of covid19_dashboard;
 
-// **************************************************************************
-// BuiltValueGenerator
-// **************************************************************************
 
 Serializer<Covid19Dashboard> _$covid19DashboardSerializer =
     new _$Covid19DashboardSerializer();
