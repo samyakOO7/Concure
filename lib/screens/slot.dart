@@ -6,6 +6,7 @@ import 'package:flutter/painting.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class VaccinebyPin extends StatefulWidget {
   @override
@@ -218,7 +219,9 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                               ", " +
                                               sdata.minAgeLimit.toString() +
                                               ", " +
-                                              sdata.vaccine,
+                                              sdata.vaccine+
+                                          "+" +
+                                          sdata.availableCapacity.toString(),
                                           style: TextStyle(
                                               fontSize: 15.0,
                                               fontWeight: FontWeight.w700,
@@ -245,6 +248,22 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                               ),
                                             ),
                                           ]),
+                                        ),
+                                        leading: TextButton(
+                                          child: Text(
+                                            "Book now ",
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w700,
+                                                color: sdata.availableCapacity>0?Colors.green:Colors.red),
+                                          ),
+                                          onPressed: (){
+                                            try {
+                                              launch('https://cowin.gov.in/home');
+                                            } on Exception catch (e) {
+                                              print(e);
+                                            }
+                                          },
                                         ),
                                       ),
                                     ],
