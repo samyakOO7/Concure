@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:covid19_tracker/model/constants.dart';
 import 'package:covid19_tracker/model/config.dart';
+import 'package:covid19_tracker/screens/slot.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'Countries.dart';
 import 'Indian.dart';
 
 import 'dashboard.dart';
+import 'graphsline.dart';
 
 class SettingPage extends StatefulWidget {
   _SettingPage createState() => _SettingPage();
@@ -35,6 +37,8 @@ class _SettingPage extends State<SettingPage> {
     isSwitched = prefs.getBool('isSwitched');
     return isSwitched;
   }
+
+  String title = "      Select Dark Mode";
 
   @override
   void initState() {
@@ -59,29 +63,30 @@ class _SettingPage extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     // Icon blub = IconDa(Icons.lightbulb, size: 35,);
-    IconData blub2 = Icons.lightbulb;
-    IconData blub = Icons.highlight;
+    IconData blub2 = Icons.brightness_3_sharp;
+    IconData blub = Icons.brightness_6;
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Concure'),
       ),
       body: Container(
+        // color: Colors.red,
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.values[5],
           children: [
             Card(
               elevation: 3,
               child: Row(
-                // crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // crossAxisAlignment: Cross/isAlignment.spaceEvenly,
                 children: [
-
                   Text(
-                    "Set Dark Mode",
-                    style: TextStyle(fontSize: 20),
+                    title,
+                    style: TextStyle(fontSize: 23),
                   ),
-                  SizedBox(width: 30,),
+                  SizedBox(
+                    width: 30,
+                  ),
                   Padding(
                     padding: EdgeInsets.all(20),
                     child: GestureDetector(
@@ -93,9 +98,16 @@ class _SettingPage extends State<SettingPage> {
                         if (isSwitched == false) {
                           isSwitched = true;
                           // print("HERE make ");
+                          title = "       Select Dark Mode";
+                          constant.navbar = Colors.white;
+
                           constant().setcolor(Colors.black, Color(0xff202c3b));
                         } else {
                           isSwitched = false;
+
+                          constant.navbar = Color(0xff202c3b);
+
+                          title = "       Select Light Mode";
 
                           constant().setcolor(Colors.white, Colors.cyan);
                         }
@@ -107,64 +119,57 @@ class _SettingPage extends State<SettingPage> {
                 ],
               ),
             ),
-            SizedBox(
-             height: 50,
-            ),
-            GestureDetector(
-              onTap: () {
-                launch('https://covid19responsefund.org/en/');
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                color: constant.downbar,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text('DONATE ',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
+            // SizedBox(height: 100,),
+            Container(
+              height: MediaQuery.of(context).size.height - 500,
+              // height:  MediaQuery.of(context).size.height -600,
+              // color: Colors.yellow,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  clickbutton(
+                    'Graphical Data',
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => GraphsLine()),
+                      );
+                    },
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  clickbutton('Vaccinator', () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => VaccinebyPin()),
+                    );
+                  }),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  clickbutton('Donate', () {
+                    launch('https://covid19responsefund.org/en/');
+                  }),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  clickbutton(
+                    'Myth Busters',
+                    () {
+                      launch(
+                          'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters');
+                    },
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 10,),
-            GestureDetector(
-              onTap: () {
-                launch(
-                    'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters');
-              },
-              child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  color: constant.downbar,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text('MYTH BUSTERS',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          )),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: Colors.white,
-                      ),
-                    ],
-                  )),
-            )
           ],
         ),
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: constant.navbar,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
@@ -176,14 +181,13 @@ class _SettingPage extends State<SettingPage> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
             child: GNav(
-              // rippleColor: Colors.black87,
-              // hoverColor: Colors.yellow,
+
               gap: 8,
-              // activeColor: Colors.black,
+
               iconSize: 24,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               duration: Duration(milliseconds: 400),
-              // tabBackgroundColor: Colors.yellow,
+
               color: Colors.black,
               tabs: [
                 GButton(
@@ -211,7 +215,7 @@ class _SettingPage extends State<SettingPage> {
                     textColor: Colors.purple,
                     iconActiveColor: Colors.purpleAccent[200],
                     onPressed: () {
-                      Navigator.push(
+                      Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => Cont()),
                       );
@@ -226,11 +230,6 @@ class _SettingPage extends State<SettingPage> {
                   onPressed: () {
                     Navigator.pushReplacement(context,
                         MaterialPageRoute(builder: (context) => Indian()));
-//
-                    // Navigator.pushReplacement(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => MytestApp()),
-                    // );
                   },
                 ),
                 GButton(
@@ -240,12 +239,6 @@ class _SettingPage extends State<SettingPage> {
                   backgroundColor: Colors.blue[100],
                   textColor: Colors.blue[500],
                   iconActiveColor: Colors.blue[600],
-                  onPressed: () {
-                    // Navigator.pushReplacement(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => MytestApp()),
-                    // );
-                  },
                 ),
               ],
               selectedIndex: 3,
@@ -256,6 +249,35 @@ class _SettingPage extends State<SettingPage> {
               // },
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget clickbutton(String title, fuction()) {
+    return GestureDetector(
+      onTap: fuction,
+      child: Container(
+        decoration: BoxDecoration(
+            color: constant.downbar, borderRadius: BorderRadius.circular(30)),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text('  ' + title,
+                style: TextStyle(
+                  // letterSpacing: 0
+                  fontSize: 23,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                )),
+            Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+              size: 27,
+            ),
+          ],
         ),
       ),
     );

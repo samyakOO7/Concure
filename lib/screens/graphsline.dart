@@ -1,3 +1,4 @@
+import 'package:covid19_tracker/model/constants.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -275,7 +276,7 @@ class _GraphsLineState extends State<GraphsLine> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: constant.navbar,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,

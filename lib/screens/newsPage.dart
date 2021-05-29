@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:covid19_tracker/model/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
@@ -114,7 +115,7 @@ class _MyAppState extends State<HomePage> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: constant.navbar,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,

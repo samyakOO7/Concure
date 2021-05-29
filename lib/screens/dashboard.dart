@@ -304,8 +304,9 @@ class _DashboardScreenState extends State<DashboardScreen>
         ),
       ),
       bottomNavigationBar: Container(
+
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: constant.navbar,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,

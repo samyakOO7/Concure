@@ -2,6 +2,7 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:covid19_tracker/model/config.dart';
+import 'package:covid19_tracker/model/constants.dart';
 import 'package:covid19_tracker/screens/SettingPage.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -236,7 +237,7 @@ class _Indian extends State<Indian> {
 
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: constant.navbar,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
