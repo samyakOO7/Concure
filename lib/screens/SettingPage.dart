@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:covid19_tracker/model/constants.dart';
 import 'package:covid19_tracker/model/config.dart';
+import 'package:covid19_tracker/screens/newsPage.dart';
 import 'package:covid19_tracker/screens/slot.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -9,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'Countries.dart';
 import 'Indian.dart';
 
@@ -24,8 +24,6 @@ class _SettingPage extends State<SettingPage> {
   var isSwitched = false;
 
   Future<bool> Savesettings(bool swit) async {
-    // TODO: implement initState
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isSwitched', isSwitched);
 
@@ -63,8 +61,8 @@ class _SettingPage extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
     // Icon blub = IconDa(Icons.lightbulb, size: 35,);
-    IconData blub2 = Icons.brightness_3_sharp;
-    IconData blub = Icons.brightness_6;
+    IconData blub = Icons.brightness_3_sharp;
+    IconData blub2 = Icons.brightness_6;
 
     return Scaffold(
       appBar: AppBar(
@@ -97,9 +95,10 @@ class _SettingPage extends State<SettingPage> {
                       onTap: () {
                         if (isSwitched == false) {
                           isSwitched = true;
-                          // print("HERE make ");
+
                           title = "       Select Dark Mode";
                           constant.navbar = Colors.white;
+                          constant.tapInfo = Colors.blue;
 
                           constant().setcolor(Colors.black, Color(0xff202c3b));
                         } else {
@@ -108,7 +107,7 @@ class _SettingPage extends State<SettingPage> {
                           constant.navbar = Color(0xff202c3b);
 
                           title = "       Select Light Mode";
-
+                          constant.tapInfo = Colors.greenAccent;
                           constant().setcolor(Colors.white, Colors.cyan);
                         }
                         currentTheme.switchTheme();
@@ -119,7 +118,7 @@ class _SettingPage extends State<SettingPage> {
                 ],
               ),
             ),
-            // SizedBox(height: 100,),
+            SizedBox(height: 50,),
             Container(
               height: MediaQuery.of(context).size.height - 500,
               // height:  MediaQuery.of(context).size.height -600,
@@ -139,6 +138,11 @@ class _SettingPage extends State<SettingPage> {
                   SizedBox(
                     height: 10,
                   ),
+                  clickbutton('Covid News', () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(),),);
+
+                  }),
+                  SizedBox(height: 10,),
                   clickbutton('Vaccinator', () {
                     Navigator.push(
                       context,
@@ -181,7 +185,6 @@ class _SettingPage extends State<SettingPage> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
             child: GNav(
-
               gap: 8,
 
               iconSize: 24,

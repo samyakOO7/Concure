@@ -379,6 +379,28 @@ class _Indian extends State<Indian> {
 }
 
 Widget Pan({String tr, String nr, String td, String nd, String ti, String ni}) {
+  int tri , nri, tdi, ndi, tii,nii;
+  tri = int.parse(tr);
+  nri = int.parse(nr);
+  tdi = int.parse(td);
+  ndi = int.parse(nd);
+  tii = int.parse(ti);
+  nii =  int.parse(ni);
+  if(tri < 0)
+    tri = -1 * tri;
+  if(nri < 0 )
+    nri = -1 * nri;
+  if(tdi < 0)
+    tdi = -1 * tdi;
+  if(ndi < 0)
+    ndi = -1 * ndi ;
+  if(tii < 0)
+    tii = -1 * tii;
+  if(nii < 0)
+    nii = -1 * nii;
+
+
+
   return Container(
     // height: 0,
     child: GridView(
@@ -390,34 +412,34 @@ Widget Pan({String tr, String nr, String td, String nd, String ti, String ni}) {
         StatusPanel2(
           textColor: Colors.green,
           title: 'Total Recovered',
-          count: tr,
+          count: tri.toString(),
         ),
         StatusPanel2(
           textColor: Colors.green,
           title: 'Newly Recovered',
-          count: nr,
+          count: nri.toString(),
         ),
         StatusPanel2(
           // panelColor: Colors.blue[100],
           textColor: Colors.red[600],
           title: 'Total Deceased',
-          count: nd,
+          count: ndi.toString(),
         ),
         StatusPanel2(
           textColor: Colors.red[600],
           title: 'Newly Deceased',
-          count: nd,
+          count: ndi.toString(),
         ),
         StatusPanel2(
           textColor: Colors.blue,
           title: 'Total Infected',
-          count: ti,
+          count: tii.toString(),
         ),
         StatusPanel2(
           // panelColor: Colors.blue[100],
           textColor: Colors.blue,
           title: 'Newly Infected',
-          count: ni,
+          count: nii.toString(),
         ),
       ],
     ),

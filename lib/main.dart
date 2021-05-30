@@ -1,33 +1,29 @@
 import 'package:covid19_tracker/model/config.dart';
-// import 'package:covid19_tracker/model/countries.dart';
-// import 'package:covid19_tracker/screens/Countries.dart';
-// import 'package:covid19_tracker/screens/Indian.dart';
-// import 'package:covid19_tracker/screens/SettingPage.dart';
 import 'package:covid19_tracker/screens/dashboard.dart';
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import "package:hive_flutter/hive_flutter.dart";
-void main() async{
+
+void main() async {
   await Hive.initFlutter();
-  box= await Hive.openBox('easyTheme');
+  box = await Hive.openBox('easyTheme');
   runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
   _MyApp createState() => _MyApp();
-  }
+}
+
 class _MyApp extends State<MyApp> {
   @override
   void initState() {
     super.initState();
     currentTheme.addListener(() {
       print("Changed");
-      setState(() {
-
-      });
+      setState(() {});
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -46,5 +42,4 @@ class _MyApp extends State<MyApp> {
       home: DashboardScreen(),
     );
   }
-
 }
