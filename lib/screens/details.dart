@@ -17,20 +17,25 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar:  AppBar(
+        centerTitle: true,
+        title: Text('Covid News'),
+      ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Stack(
           children: <Widget>[
             Image.network(
               widget.urlToImage,
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height * 0.5,
             ),
+            // SizedBox(height: 200,),
             Padding(
               padding: EdgeInsets.fromLTRB(0.0, 300.0, 0.0, 0.0),
               child: Container(
-                height: MediaQuery.of(context).size.height,
+                // height: MediaQuery.of(context).size.height-500,
                 width: MediaQuery.of(context).size.width,
                 child: Material(
                   borderRadius: BorderRadius.circular(35.0),
@@ -46,10 +51,13 @@ class _DetailsPageState extends State<DetailsPage> {
                           ),
                         ),
                       ),
+
                       Text(
                         widget.publishedAt.substring(0, 10),
                         style: TextStyle(
                           fontSize: 15.0,
+                          color: Colors.redAccent,
+                          fontWeight:  FontWeight.w500
                         ),
                       ),
                       Padding(

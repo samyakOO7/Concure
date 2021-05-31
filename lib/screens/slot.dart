@@ -31,7 +31,26 @@ Future<List<Centers>> checkavailabilty1(String p, String d) async {
   }
 }
 
+
 class _VaccinebyPinState extends State<VaccinebyPin> {
+
+  Future<List<Centers>> checkavailabilty1(String p, String d) async {
+    // print("pincode "+p);
+    // print("date "+d);
+
+    var url = Uri.parse(
+        'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=${p}&date=${d}');
+    var response = await http.get(url);
+    // print("res ${response.body}");
+    if (response.statusCode == 200) {
+      var r = covidvaccinebypinFromJson(response.body);
+      List<Centers> s = r.centers;
+
+      return s;
+    } else {
+      throw Exception('Unexpected error occured!');
+    }
+  }
   List<Centers> cn;
   TextEditingController pin = new TextEditingController();
   final dateController = TextEditingController();
@@ -150,6 +169,7 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                   SizedBox(
                     height: 20,
                   ),
+
                   // DialogButton(
                   //   // color: Colors.deepPurpleAccent,
                   //   color:theme,
@@ -176,6 +196,7 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                   //   style: TextStyle(color: Colors.white, fontSize: 20),
                   // ),
                   // ),
+
                   GestureDetector(
                     onTap: () async {
 
@@ -187,6 +208,43 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                       setState(() async {
 
 
+
+                        cn = await checkavailabilty1(pincode, date);
+                       // for(Centers  c in cn)
+                       //   print(c);
+                        setState(() {});
+                      }
+                      );
+
+
+
+                    },
+                    child: Container(
+
+                      height: 50,
+                      width: MediaQuery.of(context).size.width-160,
+                      decoration: BoxDecoration(
+                        color: theme,
+                        borderRadius: BorderRadius.circular(40),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.deepOrangeAccent,
+                            blurRadius: 2.0,
+                            spreadRadius: 0.0,
+                            offset: Offset(2.0, 1.0), // shadow direction: bottom right
+                          )
+                        ],
+                      ),
+                      child: Center(
+
+                        child: Text(
+                          "OK",
+                          style: TextStyle(color: Colors.white, fontSize: 23),
+                        ),
+                      ),
+
+
+
                         cn = await checkavailabilty1(pincode, date);
                         // click = "Your Centers";
                         // print(click);
@@ -195,11 +253,61 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                         });
 
 
+                    ),
+                  ),
+                  // SizedBox(height: 10,),
+                  // Divider(color: Colors.blueGrey,thickness: 1,),
+                  SizedBox(height: 30,),
+                  Expanded(
+                      child: Center(
+                          child: ListView.builder(
+                              itemCount: cn == null ? 0 : cn.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                Centers cdata = cn[index];
+                                List<Session> s = cdata.sessions;
+                                // print("sessions length "+s.length.toString());
+                                bool fortyfive = false;
+                                bool eighteen = false;
+
+
+                                for(Session si in s)
+                                  {
+                                    String date1 = si.date.toString();
+
                         // checkavailabilty1(pincode, date). then((value) async {
                           // await
                           //   await Future.delayed(Duration(seconds: 4));
                           // cn = value;
 
+
+                                    int age = int.parse(si.minAgeLimit.toString());
+                                    // print("date check : "+(date1==date).toString());
+                                  if(date1 == date) {
+                                    if (age == 18)
+                                      eighteen = true;
+                                    else if (age == 45)
+                                      fortyfive = true;
+                                  }
+
+                                    // print("min age limit is "+si.minAgeLimit.toString());
+                                  }
+
+                                // print("forty "+fortyfive.toString());
+                                // print("eight "+eighteen.toString());
+
+
+                                // for(Session si in s)
+                                //   print("sessions are "+si.toString());
+                                List<VaccineFee> v = cdata.vaccineFees;
+                                int i = 0;
+
+                                Session sdata = s[i];
+                                // print("sdata "+sdata.toString());
+
+
+                                i <= s.length ? ++i : 0;
+                                int slots = sdata.slots.length;
+                                // print("slots ares"+sdata.s);
 
 
 
@@ -242,6 +350,7 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                 Session sdata = s[i];
                                 i <= s.length ? ++i : 0;
                                 int slots = sdata.slots.length;
+
 
                                 // print("here slots " + sdata.slots.toString());
 
@@ -289,11 +398,17 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                       ListTile(
                                         title: Text(
                                           sdata.date +
+
+                                              ", \nAvailable for   :  "+ (eighteen?"18+ ":"")+(fortyfive?",45+ ":"")+""+"\n"+
+                                              sdata.vaccine+
+                                          "  : " +
+
                                               ", " +
                                               sdata.minAgeLimit.toString() +
                                               ", " +
                                               sdata.vaccine+
                                           "  + " +
+
                                           sdata.availableCapacity.toString(),
                                           style: TextStyle(
                                               fontSize: 15.0,
@@ -322,6 +437,12 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                             ),
                                           ]),
                                         ),
+
+
+                                        // onPressed:
+                                        leading:  sdata.availableCapacity > 0 ? GestureDetector(
+                                          onTap: (){
+
                                         leading: TextButton(
                                           child: Text(
                                             "Book now ",
@@ -331,13 +452,53 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                                 color: sdata.availableCapacity>0?Colors.green:Colors.red),
                                           ),
                                           onPressed: (){
+
                                             try {
                                               launch('https://cowin.gov.in/home');
                                             } on Exception catch (e) {
                                               print(e);
                                             }
                                           },
+
+                                          child: Container(
+                                            // semanticContainer: true,
+                                            // elevation: 2,
+                                            // shadowColor: Colors.green,
+                                            padding: EdgeInsets.all(10),
+                                            decoration: BoxDecoration(
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.red,
+                                                  blurRadius: 2.0,
+                                                  spreadRadius: 0.0,
+                                                  offset: Offset(2.0, 1.0), // shadow direction: bottom right
+                                                )
+                                              ],
+                                              
+                                              color:Colors.green,
+                                              borderRadius: BorderRadius.circular(30),
+                                            ),
+
+                                            child: Text(
+                                              "Book now ",
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ):
+                                            Container(child: Text(
+                                              "Not Available",
+                                              style: TextStyle(
+                                                  fontSize: 15.0,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.black),
+                                            ),)
+
+
                                         ),
+
                                       ),
                                     ],
                                   )),

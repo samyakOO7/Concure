@@ -1,3 +1,4 @@
+import 'package:covid19_tracker/model/constants.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -93,8 +94,6 @@ class _GraphsLineState extends State<GraphsLine> {
       tempred = int.parse(dataList[i]['dailyconfirmed']);
       temp = int.parse(dataList[i]['dailyrecovered']);
       int date = getdate(dataList[i]['dateymd']);
-      // print("date is "+date.toString());
-
       FlSpot fl = new FlSpot(
           double.parse(date.toString()), double.parse(temp.toString()));
       stgreen.push(fl);
@@ -103,9 +102,6 @@ class _GraphsLineState extends State<GraphsLine> {
 
       stred.push(fl2);
     }
-    //   print("length is  "+greenspotsformonth.length.toString());
-    // print('Here EVERYTHING IS GOOD');
-
     setState(() {});
   }
 
@@ -214,6 +210,42 @@ class _GraphsLineState extends State<GraphsLine> {
           const SizedBox(
             height: 37,
           ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+
+            children: <Widget>[
+              Row(
+                mainAxisAlignment:
+                MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin:
+                    EdgeInsets.only(right: 4),
+                    color: Colors.red,
+                    width: 15,
+                    height: 15,
+                  ),
+                  Text("Infected    ",style: TextStyle(fontSize: 17),),
+                ],
+              ),
+
+
+              Row(
+                mainAxisAlignment:
+                MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin:
+                    EdgeInsets.only(right: 4),
+                    color: Colors.green,
+                    width: 15,
+                    height: 15,
+                  ),
+                  Text("Recovered",style: TextStyle(fontSize: 17),),
+                ],
+              ),
+            ],
+          ),
           Expanded(
               child: segmentedControlGroupValue == 0
                   ? (greenspots == null
@@ -233,8 +265,8 @@ class _GraphsLineState extends State<GraphsLine> {
                 const EdgeInsets.only(right: 16.0, left: 6.0),
                 child: LineChart(
                   sampleData2(),
-                  swapAnimationDuration:
-                  const Duration(milliseconds: 250),
+                  // swapAnimationDuration:
+                  // const Duration(milliseconds: 250),
                 ),
               ))),
           const SizedBox(
@@ -244,7 +276,7 @@ class _GraphsLineState extends State<GraphsLine> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: constant.navbar,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,

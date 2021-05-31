@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:covid19_tracker/model/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:http/http.dart' as http;
@@ -51,12 +52,14 @@ class _MyAppState extends State<HomePage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => DetailsPage(
-                        title: data[index]["title"],
-                        author: (data[index]["author"])==null?"Author" : data[index]["author"] ,
-                        description: data[index]["description"],
-                        publishedAt: data[index]["publishedAt"],
-                        urlToImage: data[index]["urlToImage"],
-                      )));
+                            title: data[index]["title"],
+                            author: (data[index]["author"]) == null
+                                ? "Author"
+                                : data[index]["author"],
+                            description: data[index]["description"],
+                            publishedAt: data[index]["publishedAt"],
+                            urlToImage: data[index]["urlToImage"],
+                          )));
             },
             child: Stack(
               children: <Widget>[
@@ -77,16 +80,17 @@ class _MyAppState extends State<HomePage> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 350.0, 0.0, 0.0),
                   child: Container(
-                    height: 200.0,
+                    height: 220.0,
                     width: 400.0,
                     child: Material(
                       borderRadius: BorderRadius.circular(35.0),
                       elevation: 10.0,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           Padding(
                             padding:
-                            EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 20.0),
+                                EdgeInsets.fromLTRB(20.0, 20.0, 10.0, 20.0),
                             child: Text(
                               data[index]["title"],
                               style: TextStyle(
@@ -97,7 +101,10 @@ class _MyAppState extends State<HomePage> {
                           ),
                           Text(
                             "Tap for more information!",
-                            style: TextStyle(color: Colors.blue),
+                            style: TextStyle(
+                                color: constant.tapInfo,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w300),
                           )
                         ],
                       ),
@@ -114,7 +121,7 @@ class _MyAppState extends State<HomePage> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: constant.navbar,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:covid19_tracker/model/constants.dart';
 import 'package:covid19_tracker/model/countries.dart';
 
 import 'package:covid19_tracker/screens/SettingPage.dart';
@@ -231,7 +232,7 @@ var per_confirmed;
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: constant.navbar,
           boxShadow: [
             BoxShadow(
               blurRadius: 20,
