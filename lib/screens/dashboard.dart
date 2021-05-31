@@ -202,8 +202,102 @@ class _DashboardScreenState extends State<DashboardScreen>
                               ],
                             ),
                           ),
+
                         ),
                       ],
+
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  AspectRatio(
+                    aspectRatio: 6,
+                    //  child: Text('Siddhant '),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => GraphsLine()),
+                        );
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: constant.downbar,
+                              borderRadius: BorderRadius.circular(30)),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('  More Details',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              ),
+                            ],
+                          )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  AspectRatio(
+                    aspectRatio: 6,
+                    //  child: Text('Siddhant '),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VaccinebyPin()),
+                        );
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                              color: constant.downbar,
+                              borderRadius: BorderRadius.circular(30)),
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 10),
+                          margin: EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 10),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Text('  Vaccinator',
+                                  style: TextStyle(
+                                    // letterSpacing: 0
+                                    fontSize: 17,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                              ),
+                            ],
+                          )),
+
                     ),
                   ),
                 ],

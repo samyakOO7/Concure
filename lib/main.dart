@@ -1,4 +1,5 @@
 import 'package:covid19_tracker/model/config.dart';
+
 import 'package:covid19_tracker/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';

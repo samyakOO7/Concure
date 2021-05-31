@@ -14,6 +14,23 @@ class VaccinebyPin extends StatefulWidget {
   _VaccinebyPinState createState() => _VaccinebyPinState();
 }
 
+Future<List<Centers>> checkavailabilty1(String p, String d) async {
+  var url = Uri.parse(
+      'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=${p}&date=${d}');
+  var response = await http.get(url);
+  // print("res ${response.body}");
+  if (response.statusCode == 200) {
+    var r = covidvaccinebypinFromJson(response.body);
+    List<Centers> s = r.centers;
+
+    // print("S  is :  " + s.toString());
+    // print("hello siddahant " + r.toString());
+    return s;
+  } else {
+    throw Exception('Unexpected error occured!');
+  }
+}
+
 
 class _VaccinebyPinState extends State<VaccinebyPin> {
 
@@ -153,6 +170,32 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                     height: 20,
                   ),
 
+                  // DialogButton(
+                  //   // color: Colors.deepPurpleAccent,
+                  //   color:theme,
+                  //   onPressed: () {
+                  //     t = pincode;
+                  //     pincode = pin.text;
+                  //     date = dateController.text;
+                  //
+                  //
+                  //     print('CLICKED and the value is : '+click);
+                  //     setState(() {
+                  //
+            // checkavailabilty1(pincode, date).then((value) {
+            //   cn = value;
+            //
+            //   click = "Your Centers";
+
+
+            // });
+                  //     });
+                  //   },
+                  // child: Text(
+                  //   click,
+                  //   style: TextStyle(color: Colors.white, fontSize: 20),
+                  // ),
+                  // ),
 
                   GestureDetector(
                     onTap: () async {
@@ -163,6 +206,7 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
 
                       // print(click);
                       setState(() async {
+
 
 
                         cn = await checkavailabilty1(pincode, date);
@@ -199,6 +243,16 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                         ),
                       ),
 
+
+
+                        cn = await checkavailabilty1(pincode, date);
+                        // click = "Your Centers";
+                        // print(click);
+                        setState(() {
+
+                        });
+
+
                     ),
                   ),
                   // SizedBox(height: 10,),
@@ -215,9 +269,16 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                 bool fortyfive = false;
                                 bool eighteen = false;
 
+
                                 for(Session si in s)
                                   {
                                     String date1 = si.date.toString();
+
+                        // checkavailabilty1(pincode, date). then((value) async {
+                          // await
+                          //   await Future.delayed(Duration(seconds: 4));
+                          // cn = value;
+
 
                                     int age = int.parse(si.minAgeLimit.toString());
                                     // print("date check : "+(date1==date).toString());
@@ -247,6 +308,48 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                 i <= s.length ? ++i : 0;
                                 int slots = sdata.slots.length;
                                 // print("slots ares"+sdata.s);
+
+
+
+                        // });
+
+
+                      }
+                      );
+
+
+
+                    },
+                    child: Container(
+
+                      height: 50,
+                      width: MediaQuery.of(context).size.width-160,
+                      decoration: BoxDecoration(
+                        color: theme,
+                        borderRadius: BorderRadius.circular(40)
+                      ),
+                      child: Center(
+                        child: Text(
+                          "OK",
+                          style: TextStyle(color: Colors.white, fontSize: 23),
+                        ),
+                      ),
+
+                    ),
+                  ),
+                  Expanded(
+                      child: Center(
+                          child: ListView.builder(
+                              itemCount: cn == null ? 0 : cn.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                Centers cdata = cn[index];
+                                List<Session> s = cdata.sessions;
+                                List<VaccineFee> v = cdata.vaccineFees;
+                                int i = 0;
+
+                                Session sdata = s[i];
+                                i <= s.length ? ++i : 0;
+                                int slots = sdata.slots.length;
 
 
                                 // print("here slots " + sdata.slots.toString());
@@ -295,9 +398,17 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                       ListTile(
                                         title: Text(
                                           sdata.date +
+
                                               ", \nAvailable for   :  "+ (eighteen?"18+ ":"")+(fortyfive?",45+ ":"")+""+"\n"+
                                               sdata.vaccine+
                                           "  : " +
+
+                                              ", " +
+                                              sdata.minAgeLimit.toString() +
+                                              ", " +
+                                              sdata.vaccine+
+                                          "  + " +
+
                                           sdata.availableCapacity.toString(),
                                           style: TextStyle(
                                               fontSize: 15.0,
@@ -327,15 +438,28 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                           ]),
                                         ),
 
+
                                         // onPressed:
                                         leading:  sdata.availableCapacity > 0 ? GestureDetector(
                                           onTap: (){
+
+                                        leading: TextButton(
+                                          child: Text(
+                                            "Book now ",
+                                            style: TextStyle(
+                                                fontSize: 15.0,
+                                                fontWeight: FontWeight.w700,
+                                                color: sdata.availableCapacity>0?Colors.green:Colors.red),
+                                          ),
+                                          onPressed: (){
+
                                             try {
                                               launch('https://cowin.gov.in/home');
                                             } on Exception catch (e) {
                                               print(e);
                                             }
                                           },
+
                                           child: Container(
                                             // semanticContainer: true,
                                             // elevation: 2,
@@ -371,6 +495,9 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
                                                   fontWeight: FontWeight.w700,
                                                   color: Colors.black),
                                             ),)
+
+
+                                        ),
 
                                       ),
                                     ],

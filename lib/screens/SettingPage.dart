@@ -73,6 +73,7 @@ class _SettingPage extends State<SettingPage> {
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.values[5],
           children: [
+
             Card(
               elevation: 3,
               child: Row(
@@ -166,6 +167,38 @@ class _SettingPage extends State<SettingPage> {
                     },
                   ),
                 ],
+
+            Text("Set Dark Mode",style: TextStyle(fontSize: 20),),
+            Padding(
+              padding:  EdgeInsets.all(20),
+              child: GestureDetector
+                (child: Icon(isSwitched?blub:blub2,size: 35,), onTap: (){
+
+                if(isSwitched==false)
+                {
+                  isSwitched = true;
+                  // print("HERE make ");
+                  constant().setcolor(Colors.black, Color(0xff202c3b));
+
+
+                }
+                else
+                {
+                  isSwitched = false;
+
+
+                  constant().setcolor(Colors.white,Colors.cyan);
+
+
+                }
+                currentTheme.switchTheme();
+                Savesettings(isSwitched);
+
+
+
+
+              },
+
               ),
             ),
           ],
