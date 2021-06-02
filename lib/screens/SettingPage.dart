@@ -202,62 +202,7 @@ class _SettingPage extends State<SettingPage> {
                 ),
               ],
             )),
-              Text("Set Dark Mode",style: TextStyle(fontSize: 20)),
-              Padding(
-                  padding:  EdgeInsets.all(20),
-                  child: GestureDetector
-                    (child: Icon(isSwitched?blub:blub2,size: 35,), onTap: (){
 
-                    if(isSwitched==false)
-                    {
-                      isSwitched = true;
-                      // print("HERE make ");
-                      constant().setcolor(Colors.black, Color(0xff202c3b));
-
-
-                    }
-                    else
-                    {
-                      isSwitched = false;
-
-
-                      constant().setcolor(Colors.white,Colors.cyan);
-
-
-                    }
-                    currentTheme.switchTheme();
-                    Savesettings(isSwitched);
-
-
-
-
-                  },
-
-                  ),
-
-              ),
-              clickbutton('Vaccinator', () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => VaccinebyPin()),
-                );
-              }),
-              SizedBox(
-                height: 10,
-              ),
-              clickbutton('Donate', () {
-                launch('https://covid19responsefund.org/en/');
-              }),
-              SizedBox(
-                height: 10,
-              ),
-              clickbutton(
-                'Myth Busters',
-                    () {
-                  launch(
-                      'https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/myth-busters');
-                },
-              ),
               SizedBox(
                 height: 10,
               ),
