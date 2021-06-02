@@ -42,7 +42,8 @@ dependencies:
   rflutter_alert: ^2.0.2
   expandable: ^5.0.1
   url_launcher: ^6.0.4
-
+  flutter_local_notifications: ^4.0.1+2
+  provider: ^5.0.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

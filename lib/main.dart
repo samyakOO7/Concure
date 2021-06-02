@@ -1,9 +1,10 @@
 import 'package:covid19_tracker/model/config.dart';
-
 import 'package:covid19_tracker/screens/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import "package:hive_flutter/hive_flutter.dart";
+import 'package:provider/provider.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -27,7 +28,9 @@ class _MyApp extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+ return MultiProvider(
+    child:
+        MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Concure',
       theme: ThemeData(
@@ -41,6 +44,51 @@ class _MyApp extends State<MyApp> {
       ),
       themeMode: currentTheme.currentTheme(),
       home: DashboardScreen(),
-    );
+        ),
+     providers: [
+       ChangeNotifierProvider(create: (_) => NotificationService())
+    ]);
   }
 }
+
+class NotificationService extends ChangeNotifier{
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+  FlutterLocalNotificationsPlugin();
+  Future initialize() async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+    AndroidInitializationSettings androidInitializationSettings =
+    AndroidInitializationSettings("splash");
+
+    IOSInitializationSettings iosInitializationSettings =
+    IOSInitializationSettings();
+
+    final InitializationSettings initializationSettings =
+    InitializationSettings(android:androidInitializationSettings,iOS: iosInitializationSettings);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,onSelectNotification: onSelectNotification);
+  }
+
+  Future shownotification() async {
+    var interval = RepeatInterval.hourly;
+    var android = AndroidNotificationDetails("1687497218170948721x8", "New Trips Notification", "Notification Channel for vendor. All the new trips notifications will arrive here.",importance: Importance.max,priority: Priority.high,
+      showWhen: false);
+
+    var ios = IOSNotificationDetails();
+
+    var platform = new NotificationDetails(android:android,iOS:ios);
+
+    await _flutterLocalNotificationsPlugin.periodicallyShow(
+        5, "Demo instant notification", "You Have Got A New Trip!",interval ,platform,
+        payload: "Welcome to demo app");
+
+  }
+  Future onSelectNotification(String payload) {
+
+  }
+
+
+}
+
+
