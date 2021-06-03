@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:covid19_tracker/services/networking.dart';
 import 'package:http/http.dart' as http;
 import 'package:covid19_tracker/model/config.dart';
 import 'package:covid19_tracker/screens/dashboard.dart';
@@ -21,6 +22,7 @@ void main() async {
 class MyApp extends StatefulWidget {
   _MyApp createState() => _MyApp();
 }
+
 Future<bool> checkAvailability2() async {
   GetStorage box = GetStorage();
   bool isAvailable = false;
@@ -39,8 +41,13 @@ Future<bool> checkAvailability2() async {
       for (int i = 0; i < s.length; ++i) {
         rt = s[i].sessions;
         for (int j = 0; j < rt.length; ++j) {
-          if (rt[j].availableCapacity > 0) {
+          if (rt[j].minAgeLimit>0) {
+            NotificationService r=new  NotificationService();
+            r.ifAvailable(s[i], rt[j]);
             isAvailable = true;
+          }
+          if (isAvailable) {
+
           }
         }
       }
@@ -50,9 +57,17 @@ Future<bool> checkAvailability2() async {
 }
 
 class _MyApp extends State<MyApp> {
+  Timer _timerForInter;
   @override
   void initState() {
     super.initState();
+    _timerForInter = Timer.periodic(Duration(seconds: 60), (result) {
+      Networking n = new Networking();
+      n.get_notified();
+      print("abc");
+      checkAvailability2();
+
+    });
     currentTheme.addListener(() {
       print("Changed");
       setState(() {});
@@ -113,7 +128,7 @@ class NotificationService extends ChangeNotifier{
 
     var platform = new NotificationDetails(android:android,iOS:ios);
 
-    await _flutterLocalNotificationsPlugin.show(0, "Vaccine Available at ${center.pincode}", "Totat Vaccine availabe ", platform);
+    await _flutterLocalNotificationsPlugin.show(0, "Vaccine Available at ${center.pincode}", "Totat Vaccine availabe ${sesion.availableCapacity} \n Book now ", platform);
 
   }
   Future shownotification() async {
