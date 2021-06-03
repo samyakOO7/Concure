@@ -62,32 +62,5 @@ class Networking {
     }
   }
 
-  Future<bool> checkAvailability2() async {
-    GetStorage box = GetStorage();
-    bool isAvailable = false;
-    var currentDistrictId = box.read('district_Id');
-    if (currentDistrictId != null) {
-      String dateString = DateFormat("dd-MM-yyyy").format(DateTime.now());
-      final _url =
-          'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=$currentDistrictId&date=$dateString';
-      // print(_url);
-      var response = await http.get(_url);
-      // print("res ${response.body}");
-      if (response.statusCode == 200) {
-        var r = covidvaccinebypinFromJson(response.body);
-        List<Centers> s = r.centers;
-        List<Session> rt;
-        for (int i = 0; i < s.length; ++i) {
-          rt = s[i].sessions;
-          for (int j = 0; j < rt.length; ++j) {
-            if (rt[j].availableCapacity > 0) {
-              isAvailable = true;
-            }
-          }
-        }
-      }
-    }
-    return isAvailable;
-  }
 
 }

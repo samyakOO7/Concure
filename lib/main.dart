@@ -1,11 +1,13 @@
 import 'dart:async';
-
+import 'package:http/http.dart' as http;
 import 'package:covid19_tracker/model/config.dart';
 import 'package:covid19_tracker/screens/dashboard.dart';
+import 'package:covid19_tracker/screens/slot_booking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
 import "package:hive_flutter/hive_flutter.dart";
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -18,6 +20,33 @@ void main() async {
 
 class MyApp extends StatefulWidget {
   _MyApp createState() => _MyApp();
+}
+Future<bool> checkAvailability2() async {
+  GetStorage box = GetStorage();
+  bool isAvailable = false;
+  var currentDistrictId = box.read('district_Id');
+  if (currentDistrictId != null) {
+    String dateString = DateFormat("dd-MM-yyyy").format(DateTime.now());
+    final _url =
+        'https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict?district_id=$currentDistrictId&date=$dateString';
+    // print(_url);
+    var response = await http.get(_url);
+    // print("res ${response.body}");
+    if (response.statusCode == 200) {
+      var r = covidvaccinebypinFromJson(response.body);
+      List<Centers> s = r.centers;
+      List<Session> rt;
+      for (int i = 0; i < s.length; ++i) {
+        rt = s[i].sessions;
+        for (int j = 0; j < rt.length; ++j) {
+          if (rt[j].availableCapacity > 0) {
+            isAvailable = true;
+          }
+        }
+      }
+    }
+  }
+  return isAvailable;
 }
 
 class _MyApp extends State<MyApp> {
@@ -55,6 +84,7 @@ class _MyApp extends State<MyApp> {
   }
 }
 
+
 class NotificationService extends ChangeNotifier{
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
   FlutterLocalNotificationsPlugin();
@@ -74,6 +104,18 @@ class NotificationService extends ChangeNotifier{
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,onSelectNotification: onSelectNotification);
   }
 
+  Future<void> ifAvailable(Centers center, Session sesion) async {
+    print('Vaccine Available in: ${center.pincode}');
+    var android = AndroidNotificationDetails("1687497218170948721x8", "New Trips Notification", "Notification Channel for vendor. All the new trips notifications will arrive here.",importance: Importance.max,priority: Priority.high,
+        showWhen: false);
+
+    var ios = IOSNotificationDetails();
+
+    var platform = new NotificationDetails(android:android,iOS:ios);
+
+    await _flutterLocalNotificationsPlugin.show(0, "Vaccine Available at ${center.pincode}", "Totat Vaccine availabe ", platform);
+
+  }
   Future shownotification() async {
     var interval = RepeatInterval.everyMinute;
     var android = AndroidNotificationDetails("1687497218170948721x8", "New Trips Notification", "Notification Channel for vendor. All the new trips notifications will arrive here.",importance: Importance.max,priority: Priority.high,
