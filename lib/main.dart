@@ -57,17 +57,19 @@ Future<bool> checkAvailability2() async {
 }
 
 class _MyApp extends State<MyApp> {
-  Timer _timerForInter;
+ // Timer _timerForInter;
   @override
   void initState() {
     super.initState();
-    _timerForInter = Timer.periodic(Duration(seconds: 60), (result) {
-      Networking n = new Networking();
-      n.get_notified();
-      print("abc");
-      checkAvailability2();
-
-    });
+    // _timerForInter = Timer.periodic(Duration(seconds: 60), (result) {
+    //   Networking n = new Networking();
+    //   n.get_notified();
+    //   print("abc");
+    //   NotificationService r=new  NotificationService();
+    //   r.show();
+    //   print("demo");
+    //   checkAvailability2();
+    // });
     currentTheme.addListener(() {
       print("Changed");
       setState(() {});
