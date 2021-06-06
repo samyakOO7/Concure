@@ -1,7 +1,7 @@
 import 'package:covid19_tracker/model/constants.dart';
 import 'package:covid19_tracker/screens/slot_booking.dart';
 import 'package:covid19_tracker/services/networking.dart';
-
+import 'package:covid19_tracker/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -34,6 +34,7 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
       box.write('district_name', '${s[0].districtName}');
       Networking n=new Networking();
        n.get_notified();
+      checkAvailability2();
       return s;
     } else {
       throw Exception('Unexpected error occured!');

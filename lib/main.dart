@@ -11,11 +11,31 @@ import "package:hive_flutter/hive_flutter.dart";
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:workmanager/workmanager.dart';
+
+void callbackDispatcher()
+{
+  Workmanager.executeTask((taskName, inputData) async {
+    Networking n = new Networking();
+    NotificationService nr= new NotificationService();
+    n.get_notified();
+    checkAvailability2();
+    return Future.value(true);
+  });
+}
+
 
 void main() async {
+
   await Hive.initFlutter();
   await GetStorage.init();
   box = await Hive.openBox('easyTheme');
+  WidgetsFlutterBinding.ensureInitialized();
+  await Workmanager.initialize(callbackDispatcher);
+  await Workmanager.registerPeriodicTask("vaccine_notify", "vaccine_notify",
+      inputData: {"data1": "value1", "data2": "value2"},
+      frequency: Duration(minutes: 15),
+      initialDelay: Duration(minutes: 1));
   runApp(MyApp());
 }
 
@@ -26,6 +46,7 @@ class MyApp extends StatefulWidget {
 Future<bool> checkAvailability2() async {
   GetStorage box = GetStorage();
   bool isAvailable = false;
+  print("check2");
   var currentDistrictId = box.read('district_Id');
   if (currentDistrictId != null) {
     String dateString = DateFormat("dd-MM-yyyy").format(DateTime.now());
@@ -37,20 +58,20 @@ Future<bool> checkAvailability2() async {
     if (response.statusCode == 200) {
       var r = covidvaccinebypinFromJson(response.body);
       List<Centers> s = r.centers;
-      List<Session> rt;
-      for (int i = 0; i < s.length; ++i) {
-        rt = s[i].sessions;
-        for (int j = 0; j < rt.length; ++j) {
-          if (rt[j].minAgeLimit>0) {
-            NotificationService r=new  NotificationService();
-            r.ifAvailable(s[i], rt[j]);
-            isAvailable = true;
-          }
-          if (isAvailable) {
-
-          }
+      List<Session> ct;
+      bool av=false;
+      NotificationService nr= new NotificationService();
+      for(int i=0;i<s.length;++i)
+        {
+          print("vinayak");
+           ct=s[i].sessions;
+           for(int j=0;j<ct.length;++j)
+             {
+               print("${ct[j].minAgeLimit}");
+               nr.ifAvailable(s[i],ct[j]);
+             }
         }
-      }
+
     }
   }
   return isAvailable;
@@ -121,17 +142,13 @@ class NotificationService extends ChangeNotifier{
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,onSelectNotification: onSelectNotification);
   }
 
-  Future<void> ifAvailable(Centers center, Session sesion) async {
+  Future<void> ifAvailable(Centers center,Session sesion) async {
     print('Vaccine Available in: ${center.pincode}');
     var android = AndroidNotificationDetails("1687497218170948721x8", "New Trips Notification", "Notification Channel for vendor. All the new trips notifications will arrive here.",importance: Importance.max,priority: Priority.high,
         showWhen: false);
-
     var ios = IOSNotificationDetails();
-
     var platform = new NotificationDetails(android:android,iOS:ios);
-
-    await _flutterLocalNotificationsPlugin.show(0, "Vaccine Available at ${center.pincode}", "Totat Vaccine availabe ${sesion.availableCapacity} \n Book now ", platform);
-
+    await _flutterLocalNotificationsPlugin.show(0, "Vaccine Available at ${center.pincode}", "Totat Vaccine availabe ${sesion.availableCapacity} \n Book now for ${sesion.minAgeLimit} \n On ${sesion.date}", platform);
   }
   Future shownotification() async {
     var interval = RepeatInterval.everyMinute;
@@ -148,12 +165,11 @@ class NotificationService extends ChangeNotifier{
     // await _flutterLocalNotificationsPlugin.periodicallyShow(
     //     5,"xyz","abc",show(),interval ,platform,
     //     payload: "Welcome to demo app");
-
   }
   Future onSelectNotification(String payload) {
 
   }
-  Future<void> show()
+  Future<void> show(String pincode,String details)
   async {
     var android = AndroidNotificationDetails("1687497218170948721x8", "New Trips Notification", "Notification Channel for vendor. All the new trips notifications will arrive here.",importance: Importance.max,priority: Priority.high,
         showWhen: false);
@@ -162,7 +178,7 @@ class NotificationService extends ChangeNotifier{
 
     var platform = new NotificationDetails(android:android,iOS:ios);
 
-    await _flutterLocalNotificationsPlugin.show(0, "Demo", "Test Notification \n hello ", platform);
+    await _flutterLocalNotificationsPlugin.show(0, pincode, details, platform);
   }
   
 
