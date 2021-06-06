@@ -1,6 +1,7 @@
 import 'package:covid19_tracker/model/constants.dart';
 import 'package:covid19_tracker/screens/slot_booking.dart';
-
+import 'package:covid19_tracker/services/networking.dart';
+import 'package:covid19_tracker/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -8,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:get_storage/get_storage.dart';
 
 class VaccinebyPin extends StatefulWidget {
   @override
@@ -16,7 +18,7 @@ class VaccinebyPin extends StatefulWidget {
 
 
 class _VaccinebyPinState extends State<VaccinebyPin> {
-
+  final box = GetStorage();
   Future<List<Centers>> checkavailabilty1(String p, String d) async {
     // print("pincode "+p);
     // print("date "+d);
@@ -28,7 +30,11 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
     if (response.statusCode == 200) {
       var r = covidvaccinebypinFromJson(response.body);
       List<Centers> s = r.centers;
-
+      box.write('state_name', '${s[0].stateName}');
+      box.write('district_name', '${s[0].districtName}');
+      Networking n=new Networking();
+       n.get_notified();
+      checkAvailability2();
       return s;
     } else {
       throw Exception('Unexpected error occured!');
@@ -156,24 +162,19 @@ class _VaccinebyPinState extends State<VaccinebyPin> {
 
                   GestureDetector(
                     onTap: () async {
-
                       t = pincode;
                       pincode = pin.text;
                       date = dateController.text;
-
+                      box.write('pincode', pincode.toString());
+                      box.write('date', date);
                       // print(click);
                       setState(() async {
-
-
                         cn = await checkavailabilty1(pincode, date);
-                       // for(Centers  c in cn)
-                       //   print(c);
+                        // for(Centers  c in cn)
+                        //   print(c);
                         setState(() {});
                       }
                       );
-
-
-
                     },
                     child: Container(
 
